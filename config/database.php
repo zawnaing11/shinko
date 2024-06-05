@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,6 +50,26 @@ return [
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'mysql_shinko' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL_SHINKO'),
+            'host' => env('DB_HOST_SHINKO', '127.0.0.1'),
+            'port' => env('DB_PORT_SHINKO', '3306'),
+            'database' => env('DB_DATABASE_SHINKO', 'laravel'),
+            'username' => env('DB_USERNAME_SHINKO', 'root'),
+            'password' => env('DB_PASSWORD_SHINKO', ''),
+            'unix_socket' => env('DB_SOCKET_SHINKO', ''),
+            'charset' => env('DB_CHARSET_SHINKO', 'utf8mb4'),
+            'collation' => env('DB_COLLATION_SHINKO', 'utf8mb4_unicode_ci'),
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
