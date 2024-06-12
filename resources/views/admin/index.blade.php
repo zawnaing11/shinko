@@ -15,12 +15,13 @@
     </div>
 </div>
 <div class="contentbar">
-<!-- Start row -->
-<div class="row">
-    <!-- Start col -->
-    <div class="col-lg-12">
-        Welcome
+    <!-- Start row -->
+    <div class="row">
+        <!-- Start col -->
+        <div class="col-lg-12">
+            Welcome
+        </div>
+        <!-- End col -->
     </div>
-    <!-- End col -->
 </div>
 @endsection

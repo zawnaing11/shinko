@@ -48,8 +48,8 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required' => 'ユーザーIDまたはパスワードが間違っています。',
-            'password.required' => 'ユーザーIDまたはパスワードが間違っています。',
+            'user_id.required' => 'ユーザーIDまたはパスワードに誤りがあります。',
+            'password.required' => 'ユーザーIDまたはパスワードに誤りがあります。',
         ];
     }
 

@@ -20,7 +20,7 @@
                     <li class="list-inline-item">
                         <div class="profilebar">
                             <div class="dropdown">
-                              <a class="dropdown-toggle" href="#" role="button" id="profilelink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ asset('/assets/admin/images/users/profile.svg') }}" class="img-fluid" alt="profile"><span class="live-icon">{{ Auth::user()->name }}</span></a>
+                              <a class="dropdown-toggle" href="#" role="button" id="profilelink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ asset('assets/admin/images/users/profile.svg') }}" class="img-fluid" alt="profile"><span class="live-icon">{{ Auth::user()->name }}</span></a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profilelink">
                                     <form method="POST" name="logout" action="{{ route('admin.logout') }}">
                                         @csrf

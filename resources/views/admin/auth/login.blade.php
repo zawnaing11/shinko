@@ -11,7 +11,7 @@
                                     <form method="POST" action="{{ route('admin.authenticate') }}">
                                         @csrf
                                         <div class="form-head">
-                                            <img src="{{ asset('/assets/admin/images/logo.svg') }}" class="img-fluid" alt="logo">
+                                            <img src="{{ asset('assets/admin/images/logo.svg') }}" class="img-fluid" alt="logo">
                                         </div>
                                         <h4 class="text-primary my-4">ログイン</h4>
                                         <div class="form-group">

@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     <!-- Fevicon -->
-    <link rel="icon" href="{{ asset('/admin/images/favicon.ico') }}">
+    <link rel="icon" href="{{ asset('assets/admin/images/favicon.ico') }}">
     <!-- Start css -->
-    <link href="{{ asset('/assets/admin/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('/assets/admin/css/flag-icon.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/admin/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/admin/css/flag-icon.min.css') }}" rel="stylesheet">
     @yield('styles')
     <!-- Plugins Custom Css -->
-    <link href="{{ asset('/assets/admin/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/admin/css/style.css') }}" rel="stylesheet">
     <!-- End css -->
 </head>
 <body class="vertical-layout">
@@ -49,13 +50,13 @@
     </div>
     <!-- End Containerbar -->
     <!-- Start js -->
-    <script src="{{ asset('/assets/admin/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin/js/popper.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin/js/vertical-menu.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/vertical-menu.js') }}"></script>
     <!-- Core js -->
-    <script src="{{ asset('/assets/admin/js/core.js') }}"></script>
-    <script src="{{ asset('/assets/admin/js/admin.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/core.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/admin.js') }}"></script>
     @yield('js')
     <!-- End js -->
 </body>

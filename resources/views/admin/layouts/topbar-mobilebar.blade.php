@@ -1,7 +1,7 @@
 <div class="row align-items-center">
     <div class="col-md-12">
         <div class="mobile-logobar">
-            <a href="{{ route('admin.index') }}" class="mobile-logo"><img src="{{ asset('/assets/admin/images/logo.svg') }}" class="img-fluid" alt="logo"></a>
+            <a href="{{ route('admin.index') }}" class="mobile-logo"><img src="{{ asset('assets/admin/images/logo.svg') }}" class="img-fluid" alt="logo"></a>
         </div>
         <div class="mobile-togglebar">
             <ul class="list-inline mb-0">

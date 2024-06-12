@@ -95,7 +95,7 @@ class AttemptToAuthenticate
         $this->limiter->increment($request);
 
         throw ValidationException::withMessages([
-            Fortify::username() => [trans('ユーザーIDまたはパスワードが間違っています。')],
+            Fortify::username() => [trans('ユーザーIDまたはパスワードに誤りがあります。')],
         ]);
     }
 
