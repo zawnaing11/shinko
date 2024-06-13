@@ -50,10 +50,10 @@ class AttemptToAuthenticate
             return $this->handleUsingCustomCallback($request, $next);
         }
 
-        if ($this->guard->attempt(
-            $request->only(Fortify::username(), 'password'),
-            $request->filled('remember'))
-        ) {
+        $login_data = $request->only(Fortify::username(), 'password');
+        $login_data['is_active'] = 1;
+
+        if ($this->guard->attempt($login_data, $request->filled('remember'))) {
             return $next($request);
         }
 

@@ -43,3 +43,10 @@ $(document).on('click', '.form-reset', function() {
 });
 
 $('[data-toggle="tooltip"]').tooltip();
+
+$('ul.vertical-menu').find('li').each(function() {
+    if (window.location.pathname.includes(this.id)) {
+        $(this).closest('ul.vertical-menu > li').addClass('active');
+        $(this).addClass('active').children('a').addClass('active');
+    }
+});

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Auth;
 
+use App\Actions\Admin\AttemptToAuthenticate;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\LoginRequest;
+use App\Responses\Admin\LoginResponse;
+use App\Responses\Admin\LogoutResponse;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Pipeline;
-use App\Actions\Admin\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
-use App\Responses\Admin\LoginResponse;
-use App\Responses\Admin\LogoutResponse;
-use App\Http\Requests\Admin\LoginRequest;
 
 class LoginController extends Controller
 {

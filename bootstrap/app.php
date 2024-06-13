@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $middleware->alias([
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'is_active' => \App\Http\Middleware\IsActive::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

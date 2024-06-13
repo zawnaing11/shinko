@@ -75,6 +75,15 @@ return [
 
     'home' => '/home',
 
+    'redirects' => [
+        'login' => [
+            'admin' => 'admin/index',
+        ],
+        'logout' => [
+            'admin' => 'admin/login',
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Fortify Routes Prefix / Subdomain
@@ -130,7 +139,7 @@ return [
     |
     */
 
-    'views' => true,
+    'views' => false,
 
     /*
     |--------------------------------------------------------------------------

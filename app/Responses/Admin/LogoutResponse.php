@@ -3,6 +3,7 @@
 namespace App\Responses\Admin;
 
 use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
+use Laravel\Fortify\Fortify;
 
 class LogoutResponse implements LogoutResponseContract
 {
@@ -17,6 +18,6 @@ class LogoutResponse implements LogoutResponseContract
     {
         return $request->wantsJson()
             ? new JsonResponse('', 204)
-            : redirect()->intended('admin/login');
+            : redirect()->intended(Fortify::redirects('logout.admin'));
     }
 }

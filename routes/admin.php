@@ -21,7 +21,7 @@ Route::middleware('guest:admin')
         Route::post('authenticate', 'authenticate')->name('authenticate');
     });
 
-Route::middleware('auth:admin')
+Route::middleware(['auth:admin', 'is_active'])
     ->group(function () {
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
         Route::view('index', 'admin.index')->name('index');

@@ -1,6 +1,7 @@
 @extends('admin.layouts.main')
 @section('title', '管理者管理')
 @section('content')
+
 <div class="breadcrumbbar">
     <div class="row align-items-center">
         <div class="col-md-12 col-lg-12">
@@ -24,4 +25,5 @@
         <!-- End col -->
     </div>
 </div>
+
 @endsection

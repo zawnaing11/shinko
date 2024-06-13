@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Laravel\Fortify\Fortify;
 
 class RedirectIfAuthenticated
 {
@@ -22,13 +23,14 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            switch ($guard) {
-                case 'admin':
-                    $redirect = redirect()->route('admin.index');
-                    break;
-            }
             if (Auth::guard($guard)->check()) {
-                return $redirect;
+                switch ($guard) {
+                    case 'admin':
+                        return redirect(Fortify::redirects('login.admin'));
+                        break;
+                    default:
+                        return redirect(config('fortify.home'));
+                }
             }
         }
 
