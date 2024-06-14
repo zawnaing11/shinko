@@ -18,6 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(\App\Http\Middleware\TrustProxies::class);
+        $middleware->alias([
+            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'is_active' => \App\Http\Middleware\IsActive::class,
+        ]);
+        // 認証されていないユーザーのリダイレクト
         $middleware->redirectGuestsTo(function (Request $request) {
             if (! $request->expectsJson()) {
                 if ($request->routeIs('admin.*')) {
@@ -26,10 +31,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('login');
             }
         });
-        $middleware->alias([
-            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-            'is_active' => \App\Http\Middleware\IsActive::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

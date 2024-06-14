@@ -16,7 +16,7 @@ class IsActive
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('admin')->user()->is_active != 1) {
+        if (Auth::guard('admin')->user()->is_active !== 1) {
             Auth::guard('admin')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

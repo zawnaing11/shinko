@@ -29,7 +29,8 @@ class RedirectIfAuthenticated
                         return redirect(Fortify::redirects('login.admin'));
                         break;
                     default:
-                        return redirect(config('fortify.home'));
+                        // return redirect(config('fortify.home'));
+                        return redirect(Fortify::redirects(''));
                 }
             }
         }
