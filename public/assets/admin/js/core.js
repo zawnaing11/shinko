@@ -56,6 +56,7 @@ $(document).ready(function() {
     };
     mediaSize();
     window.addEventListener('resize', mediaSize, false);
+{{--
     /* -- Switchery -- */
     var setting_first = document.querySelector('.js-switch-setting-first');
     var switchery = new Switchery(setting_first, { color: '#1ba4fd', size: 'small' });
@@ -73,6 +74,7 @@ $(document).ready(function() {
     var switchery = new Switchery(setting_seventh, { color: '#1ba4fd', size: 'small' });
     var setting_eightth = document.querySelector('.js-switch-setting-eightth');
     var switchery = new Switchery(setting_eightth, { color: '#1ba4fd', size: 'small' });
+--}}
     /* -- Bootstrap Popover -- */
     $('[data-toggle="popover"]').popover();
     /* -- Bootstrap Tooltip -- */
