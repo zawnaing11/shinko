@@ -78,9 +78,11 @@ return [
     'redirects' => [
         'login' => [
             'admin' => 'admin/index',
+            'company' => 'company/index',
         ],
         'logout' => [
             'admin' => 'admin/login',
+            'company' => 'company/login',
         ],
     ],
 

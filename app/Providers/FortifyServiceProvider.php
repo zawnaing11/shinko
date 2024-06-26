@@ -11,7 +11,13 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if (request()->is('admin/*')) {
+            config()->set('fortify.guard', 'admin');
+            config()->set('fortify.username', 'user_id');
+        } elseif (request()->is('company/*')) {
+            config()->set('fortify.guard', 'company');
+            config()->set('fortify.username', 'email');
+        }
     }
 
     /**

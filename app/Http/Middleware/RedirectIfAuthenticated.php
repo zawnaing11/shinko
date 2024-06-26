@@ -28,6 +28,9 @@ class RedirectIfAuthenticated
                     case 'admin':
                         return redirect(Fortify::redirects('login.admin'));
                         break;
+                    case 'company':
+                        return redirect(Fortify::redirects('login.company'));
+                        break;
                     default:
                         // return redirect(config('fortify.home'));
                         return redirect(Fortify::redirects(''));

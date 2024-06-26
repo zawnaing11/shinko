@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->prefix('admin')
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
+
+            Route::middleware('web')
+                ->prefix('company')
+                ->name('company.')
+                ->group(base_path('routes/company.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -27,6 +32,8 @@ return Application::configure(basePath: dirname(__DIR__))
             if (! $request->expectsJson()) {
                 if ($request->routeIs('admin.*')) {
                     return route('admin.login');
+                } elseif ($request->routeIs('company.*')) {
+                    return route('company.login');
                 }
                 return route('login');
             }

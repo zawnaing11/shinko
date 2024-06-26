@@ -5,7 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Responses\Admin\LogoutResponse;
+use App\Responses\Admin\LogoutResponse as AdminLogoutResponse;
+use App\Responses\Company\LogoutResponse as CompanyLogoutResponse;
 
 class IsActive
 {
@@ -14,14 +15,17 @@ class IsActive
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $guard)
     {
-        if (Auth::guard('admin')->user()->is_active !== 1) {
-            Auth::guard('admin')->logout();
+        if (Auth::guard($guard)->user()->is_active !== 1) {
+
+            Auth::guard($guard)->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            return app(LogoutResponse::class);
+
+            return app($guard == 'admin' ? AdminLogoutResponse::class : CompanyLogoutResponse::class);
         }
+
         return $next($request);
     }
 }
