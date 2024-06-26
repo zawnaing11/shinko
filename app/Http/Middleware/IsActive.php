@@ -15,17 +15,14 @@ class IsActive
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $guard)
+    public function handle(Request $request, Closure $next, string $guard)
     {
         if (Auth::guard($guard)->user()->is_active !== 1) {
-
             Auth::guard($guard)->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-
-            return app($guard == 'admin' ? AdminLogoutResponse::class : CompanyLogoutResponse::class);
+            return ucfirst($guard) . LogoutResponse::class;
         }
-
         return $next($request);
     }
 }
