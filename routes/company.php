@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Company\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +14,18 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 |
 */
 
-Route::middleware('guest:admin')
+Route::middleware('guest:company')
     ->controller(LoginController::class)
     ->group(function () {
         Route::get('login', 'login')->name('login');
         Route::post('authenticate', 'authenticate')->name('authenticate');
     });
 
-Route::middleware(['auth:admin', 'is_active:admin'])
+Route::middleware(['auth:company', 'is_active:company'])
     ->group(function () {
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-        Route::view('index', 'admin.index')->name('index');
+        Route::view('index', 'company.index')->name('index');
         Route::get('/', function () {
-            return redirect()->route('admin.index');
+            return redirect()->route('company.index');
         });
     });
