@@ -10,4 +10,10 @@ class MsProduct extends Model
     protected $table = 'ms_products';
     protected $primaryKey = 'jan_cd';
 
+    public $incrementing = false;
+
+    public function baseProduct()
+    {
+        return $this->hasMany(BaseProduct::class);
+    }
 }

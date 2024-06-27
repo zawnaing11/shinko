@@ -8,6 +8,7 @@ use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ProductPriceController extends Controller
 {
@@ -16,22 +17,37 @@ class ProductPriceController extends Controller
      */
     public function index(Request $request)
     {
-        $base_products = BaseProduct::join('store_bases', 'store_bases.base_id', '=', 'base_products.base_id')
+        $base_products = BaseProduct::join('ms_products', 'ms_products.jan_cd', '=', 'base_products.jan_cd')
+            ->join('store_bases', 'store_bases.base_id', '=', 'base_products.base_id')
             ->join('store', 'store.id', '=', 'store_bases.store_id')
             ->join('company_admin_user_stores', 'company_admin_user_stores.store_id', '=', 'store.id')
-            ->leftJoin('product_prices', function($join) {
+            ->leftJoin(DB::connection()->getDatabaseName() . '.product_prices', function($join) {
                 $join->on('product_prices.jan_cd','=','base_products.jan_cd');
                 $join->on('product_prices.store_id', '=', 'store.id');
             })
             ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
-            ->where('base_products.price_end_date', '>=', Carbon::now())
-            ->select('product_prices.id as product_price_id', 'store.id as store_id', 'store.name as store_name', 'base_products.jan_cd', 'base_products.wholesale_price', 'product_prices.price');
+            ->where([ // TODO base_productsにマッチしないが、product_pricesに存在する場合、どのように扱うか？
+                ['base_products.price_start_date', '<=', Carbon::now()],
+                ['base_products.price_end_date', '>=', Carbon::now()],
+            ])
+            ->select(
+                'product_prices.id as product_price_id',
+                'store.id as store_id',
+                'store.name as store_name',
+                'base_products.jan_cd',
+                'ms_products.product_name',
+                'base_products.wholesale_price',
+                'product_prices.price'
+            );
 
         if ($request->filled('store_name')) {
             $base_products->where('store.name', 'like', '%' . $request->store_name . '%');
         }
         if ($request->filled('jan_cd')) {
             $base_products->where('base_products.jan_cd', 'like', '%' . $request->jan_cd . '%');
+        }
+        if ($request->filled('product_name')) {
+            $base_products->where('base_products.product_name', 'like', '%' . $request->product_name . '%');
         }
         if ($request->filled('wholesale_price')) {
             $base_products->where('base_products.wholesale_price', $request->wholesale_price);
