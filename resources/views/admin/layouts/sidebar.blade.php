@@ -10,7 +10,7 @@
         <ul class="vertical-menu">
             <li>
                 <a href="{{ route('admin.notifications.index') }}">
-                    <i class="ri-layout-2-line"></i><span>お知らせ管理</span>
+                    <i class="fa fa-bullhorn"></i><span>お知らせ管理</span>
                 </a>
             </li>
         </ul>
