@@ -1,6 +1,11 @@
 @extends('company.layouts.main')
 @section('title', '商品価格管理')
+@section('styles')
+    <!-- Select2 css -->
+    <link href="{{ asset('assets/admin/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css">
+@endsection
 @section('content')
+
 <div class="contentbar">
     <div class="row">
         <div class="col-lg-12">
@@ -15,13 +20,24 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="store_name">店舗名</label>
-                                        <input type="text" id="store_name" name="store_name" class="form-control" value="{{ request()->store_name }}" placeholder="店舗名">
+                                        <select id="store_name" name="store_name" class="select2-single form-control">
+                                            <option value="">選択してください。</option>
+                                            @foreach ($stores as $store)
+                                                <option value="{{ $store->id }}" {{ request()->store_name == $store->id ? 'selected' : '' }}>{{ $store->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="jan_cd">JANコード</label>
                                         <input type="text" id="jan_cd" name="jan_cd" class="form-control" value="{{ request()->jan_cd }}" placeholder="JANコード">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="product_name">商品名</label>
+                                        <input type="text" id="product_name" name="product_name" class="form-control" value="{{ request()->product_name }}" placeholder="商品名">
                                     </div>
                                 </div>
                                 <div class="col-3">
@@ -63,6 +79,7 @@
                                     <tr>
                                         <th>店舗名</th>
                                         <th>JANコード</th>
+                                        <th>商品名</th>
                                         <th>定価価格(税抜)</th>
                                         <th>販売価格(税抜)</th>
                                         <th>操作</th>
@@ -71,8 +88,9 @@
                                 <tbody>
                         @endif
                                     <tr>
-                                        <td class="text-break">{{ $product_price->store_name }}</td>
+                                        <td class="text-break">{{ Str::limit($product_price->store_name, 30) }}</td>
                                         <td>{{ $product_price->jan_cd }}</td>
+                                        <td class="text-break">{{ Str::limit($product_price->product_name, 20) }}</td>
                                         <td>{{ $product_price->wholesale_price }}</td>
                                         <td>{{ $product_price->price }}</td>
                                         <td>
@@ -107,4 +125,10 @@
         </div>
     </div>
 </div>
+
+@endsection
+@section('js')
+    <!-- Select2 js -->
+    <script src="{{ asset('assets/admin/plugins/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/select2.js') }}"></script>
 @endsection

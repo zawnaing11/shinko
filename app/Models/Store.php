@@ -16,4 +16,10 @@ class Store extends Model
     {
         return $this->hasMany(StoreBase::class);
     }
+
+    public function companyAdminUserStore()
+    {
+        return $this->hasOne(CompanyAdminUserStore::class);
+    }
+
 }

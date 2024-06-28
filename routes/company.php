@@ -27,11 +27,14 @@ Route::middleware(['auth:company', 'is_active:company'])
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
         Route::view('index', 'company.index')->name('index');
         Route::get('/', function () {
-            return redirect()->route('company.index');
+            return redirect()->route('company.product_prices.index');
         });
         // 商品価格管理
-        Route::get('product_prices', [ProductPriceController::class, 'index'])->name('product_prices.index');
-        Route::get('product_prices/{store_id}/{jan_cd}/edit', [ProductPriceController::class, 'edit'])->name('product_prices.edit');
-        Route::put('product_prices/{product_price?}', [ProductPriceController::class, 'update'])->name('product_prices.update');
-        Route::delete('product_prices/{product_price?}', [ProductPriceController::class, 'destroy'])->name('product_prices.destroy');
+        Route::prefix('product_prices')->name('product_prices.')->controller(ProductPriceController::class)->group(function() {
+            Route::get('/', 'index')->name('index');
+            Route::get('{store_id}/{jan_cd}/edit', 'edit')->name('edit');
+            Route::put('{store_id}/{jan_cd}', 'update')->name('update');
+            Route::delete('{product_price?}', 'destroy')->name('destroy');
+        });
+
     });

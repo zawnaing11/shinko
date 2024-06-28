@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('product_prices', function (Blueprint $table) {
             $table->uuid('id')->primary()->comment('ID');
             $table->integer('store_id')->comment('店舗ID');
-            $table->string('jan_cd', 20)->comment('JANコード');
+            $table->char('jan_cd', length: 20)->comment('JANコード');
             $table->integer('price')->comment('税抜販売価格');
-            $table->timestamps();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
 
             $table->unique(['store_id', 'jan_cd']);
         });

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Company\ProductPriceRequest;
 use App\Models\BaseProduct;
+use App\Models\MsProduct;
 use App\Models\ProductPrice;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -21,9 +24,9 @@ class ProductPriceController extends Controller
             ->join('store_bases', 'store_bases.base_id', '=', 'base_products.base_id')
             ->join('store', 'store.id', '=', 'store_bases.store_id')
             ->join('company_admin_user_stores', 'company_admin_user_stores.store_id', '=', 'store.id')
-            ->leftJoin(DB::connection()->getDatabaseName() . '.product_prices', function($join) {
-                $join->on('product_prices.jan_cd','=','base_products.jan_cd');
-                $join->on('product_prices.store_id', '=', 'store.id');
+            ->leftJoin(DB::connection()->getDatabaseName() . '.product_prices', function ($join) {
+                $join->on('product_prices.jan_cd', '=', 'base_products.jan_cd')
+                    ->on('product_prices.store_id', '=', 'store.id');
             })
             ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
             ->where([ // TODO base_productsにマッチしないが、product_pricesに存在する場合、どのように扱うか？
@@ -41,13 +44,13 @@ class ProductPriceController extends Controller
             );
 
         if ($request->filled('store_name')) {
-            $base_products->where('store.name', 'like', '%' . $request->store_name . '%');
+            $base_products->where('store.id', $request->store_name);
         }
         if ($request->filled('jan_cd')) {
             $base_products->where('base_products.jan_cd', 'like', '%' . $request->jan_cd . '%');
         }
         if ($request->filled('product_name')) {
-            $base_products->where('base_products.product_name', 'like', '%' . $request->product_name . '%');
+            $base_products->where('ms_products.product_name', 'like', '%' . $request->product_name . '%');
         }
         if ($request->filled('wholesale_price')) {
             $base_products->where('base_products.wholesale_price', $request->wholesale_price);
@@ -56,10 +59,13 @@ class ProductPriceController extends Controller
             $base_products->where('product_prices.price', $request->price);
         }
 
-        $base_products = $base_products->paginate(100);
+        $base_products = $base_products->paginate(config('const.default_company_paginate_number'));
 
         return view('company.product_prices.index', [
-            'product_prices' => $base_products
+            'product_prices' => $base_products,
+            'stores' => Store::whereHas('companyAdminUserStore', function ($q) {
+                    $q->where('company_admin_user_id', Auth::user()->id);
+                })->get(),
         ]);
     }
 
@@ -82,17 +88,26 @@ class ProductPriceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(ProductPriceRequest $request, string $store_id, string $jan_cd)
     {
+        if (Store::where('id', $store_id)->doesntExist() || MsProduct::where('jan_cd', $jan_cd)->doesntExist()) {
+            abort(400);
+        }
+
+        $validated = $request->validated();
+        logger()->info('$validated', $validated);
+
         ProductPrice::updateOrCreate(
             [
-                'store_id' => $request->store_id,
-                'jan_cd' => $request->jan_cd,
+                'store_id' => $store_id,
+                'jan_cd' => $jan_cd,
             ],
-            ['price' => $request->price]
+            $validated
         );
 
-        return redirect()->route('company.product_prices.index');
+        return redirect()
+            ->route('company.product_prices.index')
+            ->with('alert.success', '商品価の作成に成功しました。');
     }
 
     /**
@@ -102,6 +117,6 @@ class ProductPriceController extends Controller
     {
         $product_price->delete();
 
-        return back()->with('alert.success', 'プレゼントコードを削除しました。');
+        return back()->with('alert.success', '商品価を削除しました。');
     }
 }
