@@ -44,7 +44,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="">画像</label>
-                                    <input type="hidden" id="is_image" name="is_image" value="{{ old('is_image, $notification->image') }}">
+                                    <input type="hidden" id="is_image" name="is_image" value="{{ old('is_image', $notification->image) }}">
                                     <input type="file" id="image" name="image" class="image_upload" data-role="none" hidden accept="{{ implode(',', config('const.accept_image_extensions')) }}">
                                     <div class="col-6 pl-0">
                                         <img class="preview_image @if (empty(old('is_image', $notification->image))) d-none @endif w-100" src="{{ (old('is_image') && (old('is_image') != $notification->image)) ? \Storage::url(config('const.notification_tmp_path') . old('is_image', $notification->image))

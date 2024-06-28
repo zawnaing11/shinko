@@ -52,7 +52,6 @@ class NotificationController extends Controller
     public function store(NotificationRequest $request)
     {
         $validated = $request->validated();
-        logger()->info('$validated', $validated);
 
         try {
             $validated['image'] = $this->imageUpload($validated['is_image'], config('const.notification_image_path'), config('const.notification_tmp_path'));
@@ -90,7 +89,6 @@ class NotificationController extends Controller
     public function update(NotificationRequest $request, Notification $notification)
     {
         $validated = $request->validated();
-        logger()->info('$validated', $validated);
 
         try {
             $validated['image'] = $this->imageUpload($validated['is_image'], config('const.notification_image_path'), config('const.notification_tmp_path'), $notification->image);
