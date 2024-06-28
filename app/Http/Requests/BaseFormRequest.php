@@ -22,6 +22,6 @@ class BaseFormRequest extends FormRequest
 
     protected function passedValidation(): void
     {
-        logger()->info('validated', $this->safe()->except('password'));
+        logger()->info('passedValidation', $this->safe()->except('password'));
     }
 }
