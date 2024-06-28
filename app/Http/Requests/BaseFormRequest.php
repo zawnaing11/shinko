@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class BaseFormRequest extends FormRequest
 {
@@ -14,8 +15,13 @@ class BaseFormRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
-        logger()->info('prepareForValidation', $this->all());
+        logger()->info('prepareForValidation', Arr::except($this->all(), 'password'));
+    }
+
+    protected function passedValidation(): void
+    {
+        logger()->info('validated', $this->safe()->except('password'));
     }
 }

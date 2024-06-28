@@ -99,15 +99,12 @@ class ProductPriceController extends Controller
             abort(400);
         }
 
-        $validated = $request->validated();
-        logger()->info('$validated', $validated);
-
         ProductPrice::updateOrCreate(
             [
                 'store_id' => $store_id,
                 'jan_cd' => $jan_cd,
             ],
-            $validated
+            $request->validated()
         );
 
         return redirect()
