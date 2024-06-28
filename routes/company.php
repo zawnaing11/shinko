@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Company\Auth\LoginController;
+use App\Http\Controllers\Company\ProductPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,14 @@ Route::middleware(['auth:company', 'is_active:company'])
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
         Route::view('index', 'company.index')->name('index');
         Route::get('/', function () {
-            return redirect()->route('company.index');
+            return redirect()->route('company.product_prices.index');
         });
+        // 商品価格管理
+        Route::prefix('product_prices')->name('product_prices.')->controller(ProductPriceController::class)->group(function() {
+            Route::get('/', 'index')->name('index');
+            Route::get('{store_id}/{jan_cd}/edit', 'edit')->name('edit');
+            Route::put('{store_id}/{jan_cd}', 'update')->name('update');
+            Route::delete('{product_price?}', 'destroy')->name('destroy');
+        });
+
     });

@@ -40,6 +40,7 @@ $(document).on('click', '.form-reset', function() {
     $(this).closest('form').find(':input').val('').end().find(':checked').prop('checked', false);
     $(this).closest('form').find('.default').prop('checked', true);
     $(this).closest('form').find(':radio').checked = true;
+    $(this).closest('form').find('select.select2-single').val('').trigger('change');
 });
 
 $('[data-toggle="tooltip"]').tooltip();
