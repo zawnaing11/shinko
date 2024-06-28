@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\ProductPriceRequest;
 use App\Models\BaseProduct;
-use App\Models\MsProduct;
 use App\Models\ProductPrice;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -39,7 +38,7 @@ class ProductPriceController extends Controller
                 'store.name as store_name',
                 'base_products.jan_cd',
                 'ms_products.product_name',
-                'base_products.wholesale_price',
+                'base_products.list_price',
                 'product_prices.price'
             );
 
@@ -51,12 +50,6 @@ class ProductPriceController extends Controller
         }
         if ($request->filled('product_name')) {
             $base_products->where('ms_products.product_name', 'like', '%' . $request->product_name . '%');
-        }
-        if ($request->filled('wholesale_price')) {
-            $base_products->where('base_products.wholesale_price', $request->wholesale_price);
-        }
-        if ($request->filled('price')) {
-            $base_products->where('product_prices.price', $request->price);
         }
 
         $base_products = $base_products->paginate(config('const.default_company_paginate_number'));
@@ -72,8 +65,16 @@ class ProductPriceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $store_id, string $jan_cd)
+    public function edit(int $store_id, string $jan_cd)
     {
+        // 商品が存在するかチェック
+        $base_products = BaseProduct::with(['storeBases' => function ($q) use ($store_id) {
+            return $q->where('store_id', $store_id);
+        }])->where('jan_cd', $jan_cd);
+        if ($base_products->doesntExist()) {
+            abort(400);
+        }
+
         $product_price = ProductPrice::where([
                 ['store_id', $store_id],
                 ['jan_cd', $jan_cd],
@@ -88,9 +89,13 @@ class ProductPriceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductPriceRequest $request, string $store_id, string $jan_cd)
+    public function update(ProductPriceRequest $request, int $store_id, string $jan_cd)
     {
-        if (Store::where('id', $store_id)->doesntExist() || MsProduct::where('jan_cd', $jan_cd)->doesntExist()) {
+        // 商品が存在するかチェック
+        $base_products = BaseProduct::with(['storeBases' => function ($q) use ($store_id) {
+            return $q->where('store_id', $store_id);
+        }])->where('jan_cd', $jan_cd);
+        if ($base_products->doesntExist()) {
             abort(400);
         }
 
@@ -107,7 +112,7 @@ class ProductPriceController extends Controller
 
         return redirect()
             ->route('company.product_prices.index')
-            ->with('alert.success', '商品価の作成に成功しました。');
+            ->with('alert.success', '商品価格の作成に成功しました。');
     }
 
     /**
@@ -116,7 +121,6 @@ class ProductPriceController extends Controller
     public function destroy(ProductPrice $product_price)
     {
         $product_price->delete();
-
-        return back()->with('alert.success', '商品価を削除しました。');
+        return back()->with('alert.success', '商品価格を削除しました。');
     }
 }

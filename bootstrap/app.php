@@ -22,7 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(\App\Http\Middleware\TrustProxies::class);
+        $middleware->append([
+            \App\Http\Middleware\TrustProxies::class,
+            \App\Http\Middleware\LoggingInfoMiddleware::class,
+        ]);
         $middleware->alias([
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'is_active' => \App\Http\Middleware\IsActive::class,

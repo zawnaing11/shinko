@@ -14,10 +14,10 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <label for="price" class="form-label">販売価格(税抜)<span class="required">*</span></label>
-                                    <input type="number" id="price" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $product_price?->price) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="販売価格(税抜)">
+                                    <label for="price" class="form-label">販売価格（税抜）<span class="required">*</span></label>
+                                    <input type="number" id="price" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $product_price?->price) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="販売価格（税抜）">
                                     @error('price')
                                         <div id="price-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror

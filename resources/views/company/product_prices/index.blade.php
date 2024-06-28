@@ -40,18 +40,6 @@
                                         <input type="text" id="product_name" name="product_name" class="form-control" value="{{ request()->product_name }}" placeholder="商品名">
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="wholesale_price">定価価格(税抜)</label>
-                                        <input type="text" id="wholesale_price" name="wholesale_price" class="form-control" value="{{ request()->wholesale_price }}" placeholder="定価価格(税抜)">
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="price">販売価格(税抜)</label>
-                                        <input type="text" id="price" name="price" class="form-control" value="{{ request()->price }}" placeholder="販売価格(税抜)">
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-right">
@@ -80,8 +68,8 @@
                                         <th>店舗名</th>
                                         <th>JANコード</th>
                                         <th>商品名</th>
-                                        <th>定価価格(税抜)</th>
-                                        <th>販売価格(税抜)</th>
+                                        <th>定価価格（税抜）</th>
+                                        <th>販売価格（税抜）</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
@@ -91,8 +79,8 @@
                                         <td class="text-break">{{ Str::limit($product_price->store_name, 30) }}</td>
                                         <td>{{ $product_price->jan_cd }}</td>
                                         <td class="text-break">{{ Str::limit($product_price->product_name, 20) }}</td>
-                                        <td>{{ $product_price->wholesale_price }}</td>
-                                        <td>{{ $product_price->price }}</td>
+                                        <td>{{ number_format($product_price->list_price) . '円' }}</td>
+                                        <td>{{ $product_price->price ? number_format($product_price->price) . '円' : '未設定' }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('company.product_prices.destroy', $product_price?->product_price_id) }}">
                                                 @csrf

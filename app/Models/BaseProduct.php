@@ -17,7 +17,7 @@ class BaseProduct extends Model
         return $this->belongsTo(MsProduct::class, 'jan_cd', 'jan_cd');
     }
 
-    public function StoreBases()
+    public function storeBases()
     {
         return $this->hasMany(StoreBase::class, 'base_id', 'base_id');
     }

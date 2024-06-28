@@ -2,19 +2,10 @@
 
 namespace App\Http\Requests\Company;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseFormRequest;
 
-class ProductPriceRequest extends FormRequest
+class ProductPriceRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -35,7 +26,7 @@ class ProductPriceRequest extends FormRequest
     public function attributes()
     {
         return [
-            'price' => '税抜販売価格',
+            'price' => '販売価格（税抜）',
         ];
     }
 }
