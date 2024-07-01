@@ -20,7 +20,9 @@ return [
     ],
 
     // product_price
-    'default_product_price_paginate_number' => 100,
+    'product_prices' => [
+        'default_paginate_number' => 100,
+    ],
 
     // notification
     'notifications' => [
