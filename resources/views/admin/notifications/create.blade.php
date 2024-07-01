@@ -46,7 +46,7 @@
                                     <input type="hidden" id="is_image" name="is_image" value="{{ old('is_image') }}">
                                     <input type="file" id="image" name="image" class="image_upload" data-role="none" hidden accept="{{ implode(',', config('const.accept_image_extensions')) }}">
                                     <div class="col-6 pl-0">
-                                        <img class="preview_image @if (empty(old('is_image'))) d-none @endif w-100" src="{{ old('is_image') ? \Storage::url(config('const.notification_tmp_path') . old('is_image')) : '#' }}">
+                                        <img class="preview_image @if (empty(old('is_image'))) d-none @endif w-100" src="{{ old('is_image') ? \Storage::url(config('const.notifications.tmp_path') . old('is_image')) : '#' }}">
                                         <div class="buttons text-center mt-3 @if (empty(old('is_image'))) d-none @endif">
                                             <button type="button" class="btn btn-danger image_delete_btn">画像削除</button>
                                         </div>

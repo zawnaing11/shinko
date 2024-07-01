@@ -50,7 +50,7 @@ class NotificationRequest extends BaseFormRequest
             if ($this->file('image')) {
                 if (! $validator->errors()->has('image')) {
                     // 残ったゴミファイルはcronで削除
-                    Storage::putFileAs(config('const.notification_tmp_path'), $this->file('image'), $this->file('image')->getClientOriginalName());
+                    Storage::putFileAs(config('const.notifications.tmp_path'), $this->file('image'), $this->file('image')->getClientOriginalName());
                 } else {
                     request()->merge(['is_image' => null]);
                 }

@@ -26,7 +26,7 @@ class Notification extends Model
     public function getImageUrlAttribute()
     {
         if ($this->image) {
-            return Storage::url(config('const.notification_image_path')) . $this->image;
+            return Storage::url(config('const.notifications.image_path')) . $this->image;
         }
     }
 

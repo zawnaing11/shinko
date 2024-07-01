@@ -54,19 +54,19 @@ class NotificationController extends Controller
         $validated = $request->validated();
 
         try {
-            $validated['image'] = $this->imageUpload($validated['is_image'], config('const.notification_image_path'), config('const.notification_tmp_path'));
+            $validated['image'] = $this->imageUpload($validated['is_image'], config('const.notifications.image_path'), config('const.notifications.tmp_path'));
 
             Notification::create($validated);
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            $new_file_path = config('const.notification_image_path') . $validated['image'];
+            $new_file_path = config('const.notifications.image_path') . $validated['image'];
             if (! empty($new_file_path) && ! empty($validated['is_image'])) {
-                Storage::move($new_file_path, config('const.notification_tmp_path') . $validated['is_image']);
+                Storage::move($new_file_path, config('const.notifications.tmp_path') . $validated['is_image']);
             }
 
             return back()
-                ->with('alert.error', 'お知らせ作成に失敗しました。')
+                ->with('alert.error', 'お知らせの作成に失敗しました。')
                 ->withInput();
         }
 
@@ -91,19 +91,19 @@ class NotificationController extends Controller
         $validated = $request->validated();
 
         try {
-            $validated['image'] = $this->imageUpload($validated['is_image'], config('const.notification_image_path'), config('const.notification_tmp_path'), $notification->image);
+            $validated['image'] = $this->imageUpload($validated['is_image'], config('const.notifications.image_path'), config('const.notifications.tmp_path'), $notification->image);
 
             $notification->fill($validated)->save();
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            $new_file_path = config('const.notification_image_path') . $validated['image'];
+            $new_file_path = config('const.notifications.image_path') . $validated['image'];
             if (! empty($new_file_path) && ! empty($validated['is_image'])) {
-                Storage::move($new_file_path, config('const.notification_tmp_path') . $validated['is_image']);
+                Storage::move($new_file_path, config('const.notifications.tmp_path') . $validated['is_image']);
             }
 
             return back()
-                ->with('alert.error', 'お知らせ更新に失敗しました。')
+                ->with('alert.error', 'お知らせの更新に失敗しました。')
                 ->withInput();
         }
 
@@ -120,14 +120,14 @@ class NotificationController extends Controller
         try {
             DB::transaction(function() use($notification) {
                 $notification->delete();
-                Storage::delete(config('const.notification_image_path') . $notification->image);
+                Storage::delete(config('const.notifications.image_path') . $notification->image);
             });
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
 
             return back()
-                ->with('alert.error', 'お知らせ削除に失敗しました。')
+                ->with('alert.error', 'お知らせの削除に失敗しました。')
                 ->withInput();
         }
 
