@@ -52,7 +52,7 @@ class ProductPriceController extends Controller
             $base_products->where('ms_products.product_name', 'like', '%' . $request->product_name . '%');
         }
 
-        $base_products = $base_products->paginate(config('const.default_company_paginate_number'));
+        $base_products = $base_products->paginate(config('const.product_prices.default_paginate_number'));
 
         return view('company.product_prices.index', [
             'product_prices' => $base_products,

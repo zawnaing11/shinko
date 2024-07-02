@@ -30,6 +30,9 @@ $(document).on('submit', '.form-cancel', function() {
 
 $('#search_box').find(':input').each(function() {
     if ($(this).val() != '') {
+        if ($(this).prop('type') == 'radio' && ! $(this).prop('checked')) {
+            return true;
+        }
         $('#search_box').find('.card-header').removeClass('collapsed');
         $('#search_box').find('.collapse').addClass('show');
         return false;

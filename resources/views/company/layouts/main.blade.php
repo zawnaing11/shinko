@@ -15,6 +15,7 @@
     @yield('styles')
     <!-- Plugins Custom Css -->
     <link href="{{ asset('assets/admin/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/admin/css/company.css') }}" rel="stylesheet" type="text/css">
     <!-- End css -->
 </head>
 <body class="vertical-layout">

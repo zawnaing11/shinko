@@ -77,7 +77,7 @@ return [
 
     'redirects' => [
         'login' => [
-            'admin' => 'admin/index',
+            'admin' => 'admin/notifications',
             'company' => 'company/product_prices',
         ],
         'logout' => [
