@@ -24,6 +24,15 @@ class UserRequest extends BaseFormRequest
                 'required',
                 'max:' . config('const.default_text_maxlength'),
             ],
+            'password' => [
+                'regex:' . config('const.password_regex'),
+                function ($attribute, $value, $fail) {
+                    if ($this->request->get('email') == $value) {
+                        return $fail('メールアドレスと一致しないようにしてください。');
+                    }
+                },
+                'confirmed'
+            ],
             'is_active' => [
                 'required',
                 'in:' . implode(',', array_keys(config('const.is_active'))),
@@ -44,7 +53,7 @@ class UserRequest extends BaseFormRequest
     public function messages()
     {
         return [
-            'password.regex' => '大文字・小文字を含めた半角英数字記号を、6文字以上16文字以内で入力してください。'
+            'password.regex' => '大文字・小文字を含めた半角英数字記号を、6文字以上60文字以内で入力してください。'
         ];
     }
 }

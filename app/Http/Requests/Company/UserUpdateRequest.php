@@ -13,17 +13,8 @@ class UserUpdateRequest extends UserRequest
     {
         $rules = parent::rules();
 
-        $rules['password'] = [
-            'nullable',
-            'min:' . config('const.default_password_minlength'),
-            'max:' . config('const.default_password_maxlength'),
-            'regex:' . config('const.password_regex'),
-            function ($attribute, $value, $fail) {
-                if ($this->request->get('email') == $value) {
-                    return $fail('メールアドレスと一致しないようにしてください。');
-                }
-            },
-        ];
+        $rules['password'][] = 'nullable';
+        $rules['password_confirmation'][] = 'nullable';
 
         return $rules;
     }

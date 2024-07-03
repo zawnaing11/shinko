@@ -27,9 +27,20 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="password" class="form-label">パスワード<span class="required">*</span></label>
-                                    <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" value="{{ old('password') }}" minlength="{{ config('const.default_password_minlength') }}" maxlength="{{ config('const.default_password_maxlength') }}" placeholder="パスワード" required>
+                                    <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" value="{{ old('password') }}" placeholder="パスワード" required>
                                     @error('password')
                                     <div id="password-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="password_confirmation">パスワード（確認用）<span class="required">*</span></label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="パスワード（確認用）" required>
+                                    @error('password_confirmation')
+                                        <div id="password_confirmation-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -51,17 +62,10 @@
                                     <label class="form-label">有効/無効<span class="required">*</span></label>
                                     <div>
                                         @foreach (config('const.is_active') as $key => $value)
-                                            @if (old('is_active'))
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if (old('is_active') == $key) checked @endif>
+                                                <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if (old('is_active', 1) == $key) checked @endif>
                                                 <label class="form-check-label" for="is_active_{{ $key }}">{{ $value }}</label>
                                             </div>
-                                            @else
-                                            <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if ($key == 1) checked @endif>
-                                                <label class="form-check-label" for="is_active_{{ $key }}">{{ $value }}</label>
-                                            </div>
-                                            @endif
                                         @endforeach
                                         @error('is_active')
                                         <div id="is_active-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>

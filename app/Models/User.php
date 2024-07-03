@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
-class User extends Model
+class User extends Authenticatable
 {
     use HasUuid;
 
