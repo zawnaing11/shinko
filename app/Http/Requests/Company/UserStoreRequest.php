@@ -14,7 +14,6 @@ class UserStoreRequest extends UserRequest
         $rules = parent::rules();
 
         $rules['password'][] = 'required';
-        $rules['password_confirmation'][] = 'required';
 
         return $rules;
     }

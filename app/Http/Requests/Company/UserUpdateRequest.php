@@ -14,7 +14,6 @@ class UserUpdateRequest extends UserRequest
         $rules = parent::rules();
 
         $rules['password'][] = 'nullable';
-        $rules['password_confirmation'][] = 'nullable';
 
         return $rules;
     }

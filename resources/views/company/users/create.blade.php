@@ -37,17 +37,6 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="password_confirmation">パスワード（確認用）<span class="required">*</span></label>
-                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="パスワード（確認用）" required>
-                                    @error('password_confirmation')
-                                        <div id="password_confirmation-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
                                     <label for="name" class="form-label">氏名<span class="required">*</span></label>
                                     <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" maxlength="{{ config('const.default_text_maxlength') }}" placeholder="氏名" required>
                                     @error('name')

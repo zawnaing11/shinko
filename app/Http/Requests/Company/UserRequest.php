@@ -31,7 +31,6 @@ class UserRequest extends BaseFormRequest
                         return $fail('メールアドレスと一致しないようにしてください。');
                     }
                 },
-                'confirmed'
             ],
             'is_active' => [
                 'required',

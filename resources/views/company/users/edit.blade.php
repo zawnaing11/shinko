@@ -10,7 +10,7 @@
             <div class="col-lg-12">
                 <div class="card mb-5">
                     <div class="card-header">
-                        <h5 class="card-title">ユーザー登録</h5>
+                        <h5 class="card-title">ユーザー編集</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -31,17 +31,6 @@
                                     <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" value="" placeholder="パスワード">
                                     @error('password')
                                         <div id="password-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="password_confirmation">パスワード（確認用）</label>
-                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="パスワード（確認用）">
-                                    @error('password_confirmation')
-                                        <div id="password_confirmation-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
