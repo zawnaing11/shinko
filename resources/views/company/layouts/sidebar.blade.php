@@ -13,7 +13,11 @@
                     <i class="ri-layout-2-line"></i><span>商品価格管理</span>
                 </a>
             </li>
-
+            <li>
+                <a href="{{ route('company.users.index') }}">
+                    <i class="ri-user-fill"></i><span>ユーザー管理</span>
+                </a>
+            </li>
         </ul>
     </div>
     <!-- End Navigationbar -->
