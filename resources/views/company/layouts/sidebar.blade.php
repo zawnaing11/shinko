@@ -8,12 +8,12 @@
     <!-- Start Navigationbar -->
     <div class="navigationbar">
         <ul class="vertical-menu">
-            <li>
+            <li id="product_prices">
                 <a href="{{ route('company.product_prices.index') }}">
                     <i class="ri-layout-2-line"></i><span>商品価格管理</span>
                 </a>
             </li>
-            <li>
+            <li id="users">
                 <a href="{{ route('company.users.index') }}">
                     <i class="ri-user-fill"></i><span>ユーザー管理</span>
                 </a>

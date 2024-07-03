@@ -8,7 +8,7 @@
     <!-- Start Navigationbar -->
     <div class="navigationbar">
         <ul class="vertical-menu">
-            <li>
+            <li id="notifications">
                 <a href="{{ route('admin.notifications.index') }}">
                     <i class="fa fa-bullhorn"></i><span>お知らせ管理</span>
                 </a>
