@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Company\Auth;
+namespace App\Http\Controllers\Admin;
 
-use App\Actions\Company\AttemptToAuthenticate;
+use App\Actions\Admin\AttemptToAuthenticate;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Company\LoginRequest;
-use App\Responses\Company\LoginResponse;
-use App\Responses\Company\LogoutResponse;
+use App\Http\Requests\Admin\LoginRequest;
+use App\Responses\Admin\LoginResponse;
+use App\Responses\Admin\LogoutResponse;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Pipeline;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     /**
     * The guard implementation.
@@ -39,13 +39,13 @@ class LoginController extends Controller
     */
     public function login()
     {
-        return view('company.auth.login');
+        return view('admin.auth.login');
     }
 
     /**
     * Attempt to authenticate a new session.
     *
-    * @param  \App\Http\Requests\Company\LoginRequest  $request
+    * @param  \App\Http\Requests\Admin\LoginRequest  $request
     * @return mixed
     */
     public function authenticate(LoginRequest $request)
@@ -66,7 +66,7 @@ class LoginController extends Controller
     * Destroy an authenticated session.
     *
     * @param  \Illuminate\Http\Request  $request
-    * @return App\Responses\Company\LogoutResponse
+    * @return App\Responses\Admin\LogoutResponse
     */
     public function logout(Request $request): LogoutResponse
     {

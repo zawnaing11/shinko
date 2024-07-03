@@ -10,7 +10,7 @@
         <ul class="vertical-menu">
             <li id="product_prices">
                 <a href="{{ route('company.product_prices.index') }}">
-                    <i class="ri-layout-2-line"></i><span>商品価格管理</span>
+                    <i class="ri-money-cny-circle-line"></i><span>商品価格管理</span>
                 </a>
             </li>
             <li id="users">
