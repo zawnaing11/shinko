@@ -8,6 +8,8 @@ return [
     'default_textarea_maxlength' => 16000,
     'default_text_maxlength' => 191,
     'default_integer_maxvalue' => 999999999,
+    // 大文字・小文字を含めた半角英数字記号を、6文字以上60文字以内
+    'password_regex' => '/^((?=.*[a-z])(?=.*[A-Z]))([a-zA-Z0-9\-+=^$*.\[\]{}()?\"!@#%&\/\\\\,><\':;|_~`\-+=]){6,60}$/',
 
     'upload_image_extensions' => $upload_image_extensions,
     'accept_image_extensions' => array_map(function ($value) {

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Company\Auth\LoginController;
 use App\Http\Controllers\Company\ProductPriceController;
+use App\Http\Controllers\Company\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,5 +37,6 @@ Route::middleware(['auth:company', 'is_active:company'])
             Route::put('{store_id}/{jan_cd}', 'update')->name('update');
             Route::delete('{product_price?}', 'destroy')->name('destroy');
         });
-
+        // ユーザー管理
+        Route::resource('users', UserController::class)->except('show');
     });
