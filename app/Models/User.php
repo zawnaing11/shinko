@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasUuid;
+    use HasApiTokens, HasUuid;
 
     // PRIMARY KEY uuid 設定
     protected $primaryKey = 'id';
