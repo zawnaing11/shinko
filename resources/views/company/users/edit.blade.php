@@ -14,7 +14,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="email">Eメールアドレス<span class="required">*</span></label>
                                     <input type="text" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $user->email) }}" placeholder="Eメールアドレス" required>
@@ -23,9 +23,7 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="password">パスワード<span class="required">*</span></label>
                                     <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" value="" placeholder="パスワード">
@@ -36,7 +34,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="name">氏名<span class="required">*</span></label>
                                     <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" maxlength="{{ config('const.default_text_maxlength') }}" placeholder="氏名" required>
@@ -45,9 +43,7 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label class="form-label">有効/無効<span class="required">*</span></label>
                                     <div>
