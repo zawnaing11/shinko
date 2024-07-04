@@ -17,13 +17,27 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="" class="form-label">タイトル<span class="required">*</span></label>
                                     <input type="text" id="title" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" maxlength="{{ config('const.default_text_maxlength') }}" placeholder="タイトル" required>
                                     @error('title')
                                     <div id="title-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="publish_date">公開日時<span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" id="publish_date" name="publish_date" class="datetime-format form-control @error('publish_date') is-invalid @enderror" value="{{ old('publish_date') }}" placeholder="YYYY-MM-DD HH:mm" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                                        </div>
+                                        @error('publish_date')
+                                            <div id="publish_date-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +76,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label class="form-label">有効/無効<span class="required">*</span></label>
                                     <div>
@@ -81,22 +95,6 @@
                                         @endforeach
                                         @error('is_active')
                                         <div id="is_active-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="publish_date">公開日時<span class="required">*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" id="publish_date" name="publish_date" class="datetime-format form-control @error('publish_date') is-invalid @enderror" value="{{ old('publish_date') }}" placeholder="YYYY-MM-DD HH:mm" required>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
-                                        </div>
-                                        @error('publish_date')
-                                            <div id="publish_date-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
