@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="">画像</label>
                                     <input type="hidden" id="is_image" name="is_image" value="{{ old('is_image') }}">
