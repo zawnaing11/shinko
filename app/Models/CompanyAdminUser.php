@@ -11,7 +11,7 @@ class CompanyAdminUser extends Authenticatable
     protected $primaryKey = 'id';
     public $timestamps = false;
 
-    public function CompanyAdminUserStores()
+    public function stores()
     {
         return $this->hasMany(CompanyAdminUserStore::class);
     }

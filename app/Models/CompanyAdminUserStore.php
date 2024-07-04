@@ -12,7 +12,7 @@ class CompanyAdminUserStore extends Model
 
     public $incrementing = false;
 
-    public function companyAdminUser()
+    public function user()
     {
         return $this->belongsTo(CompanyAdminUser::class, 'company_admin_user_id');
     }

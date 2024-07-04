@@ -21,8 +21,7 @@ return new class extends Migration
             $table->char('password', length: 60)->comment('パスワード');
             $table->string('name', length: 191)->comment('氏名');
             $table->boolean('is_active')->default(1)->comment('有効/無効');
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at');
+            $table->dateTimes();
 
             $table->foreign('company_id')->references('id')->on(DB::connection('mysql_shinko')->getDatabaseName() . '.company')->onDelete('cascade')->onUpdate('cascade');
         });

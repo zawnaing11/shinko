@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('image', 191)->nullable()->comment('画像');
             $table->boolean('is_active')->default(1)->comment('有効/無効');
             $table->dateTime('publish_date')->comment('公開日時');
-            $table->dateTime('created_at')->nullable();
-            $table->dateTime('updated_at')->nullable();
+            $table->dateTimes();
         });
     }
 

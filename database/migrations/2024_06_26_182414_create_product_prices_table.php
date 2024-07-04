@@ -16,8 +16,7 @@ return new class extends Migration
             $table->integer('store_id')->comment('店舗ID');
             $table->char('jan_cd', length: 20)->comment('JANコード');
             $table->integer('price')->comment('税抜販売価格');
-            $table->dateTime('created_at')->nullable();
-            $table->dateTime('updated_at')->nullable();
+            $table->dateTimes();
 
             $table->unique(['store_id', 'jan_cd']);
         });
