@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseProduct extends Model
@@ -20,5 +21,14 @@ class BaseProduct extends Model
     public function storeBases()
     {
         return $this->hasMany(StoreBase::class, 'base_id', 'base_id');
+    }
+
+    public function scopeCurrent($q)
+    {
+        $now = Carbon::now();
+        return $q->where([
+            ['price_start_date', '<=', $now],
+            ['price_end_date', '>=', $now],
+        ]);
     }
 }

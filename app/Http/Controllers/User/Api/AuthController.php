@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Api\LoginRequest;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,6 +23,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        // ユーザーのカートの中身をすべて削除
+        Cart::where('user_id', $user->id)->delete();
+        $user->currentAccessToken()->delete();
     }
 }
