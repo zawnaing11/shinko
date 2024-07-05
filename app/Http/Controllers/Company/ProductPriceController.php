@@ -3,13 +3,21 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Company\FileUploadRequest;
 use App\Http\Requests\Company\ProductPriceRequest;
+use App\Jobs\ProductPriceImportJob;
 use App\Models\BaseProduct;
+use App\Models\Import;
 use App\Models\ProductPrice;
 use App\Models\Store;
 use App\Repositories\Company\ProductPriceRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductPriceController extends Controller
 {
@@ -97,5 +105,97 @@ class ProductPriceController extends Controller
     {
         $product_price->delete();
         return back()->with('alert.success', '商品価格を削除しました。');
+    }
+
+    public function export()
+    {
+        $headers = [
+            'Content-Type' => 'application/octet-stream',
+        ];
+
+        $callback = function () {
+
+            $handle = fopen('php://output', 'w');
+
+            // 文字コードをShift-JISに変換
+            stream_filter_prepend($handle, 'convert.iconv.utf-8/cp932//TRANSLIT');
+
+            fputcsv($handle, [
+                'フラグ（1=登録、2=編集、3=削除）',
+                'ID（編集・削除時に使用）',
+                '店舗名',
+                '店舗ID',
+                'JANコード',
+                '商品名',
+                '定価価格（税抜）',
+                '販売価格（税抜）',
+            ]);
+
+            BaseProduct::productPriceQuery()
+                ->orderBy('base_products.jan_cd')
+                ->chunk(1000, function ($base_products) use ($handle) {
+                    foreach ($base_products as $base_product) {
+                        $values = [
+                            'flag' => '',
+                            'product_price_id' => $base_product->product_price_id,
+                            'store_name' => $base_product->store_name,
+                            'store_id' => $base_product->store_id,
+                            'jan_cd' => $base_product->jan_cd,
+                            'product_name' => $base_product->product_name,
+                            'list_price' => $base_product->list_price,
+                            'price' => $base_product->price,
+                        ];
+                        fputcsv($handle, $values);
+                    }
+                });
+            fclose($handle);
+        };
+
+        return response()->streamDownload($callback, 'product_prices.csv', $headers);
+    }
+
+    public function upload(Request $request)
+    {
+        $file_upload_request = new FileUploadRequest();
+        $validator = Validator::make(
+            $request->all(),
+            $file_upload_request->rules(),
+            [],
+            $file_upload_request->attributes()
+        );
+
+        if ($validator->fails()) {
+            return back()
+                ->with('alert.error', 'CSVアップロードに失敗しました。');
+        }
+
+        $import_file = $validator->validated()['import_file'];
+
+        try {
+            DB::transaction(function () use ($import_file) {
+                // 新規
+                $import = Import::create([
+                    'model_name' => 'ProductPrice',
+                    'file_name' => $import_file->getClientOriginalName(),
+                    'status' => 1,
+                ]);
+
+                $new_file_name = uniqid() . '.' . $import_file->getClientOriginalExtension();
+                $file_path = Storage::putFileAs(config('const.imports.file_path'), $import_file, $new_file_name);
+
+                dispatch(new ProductPriceImportJob($import, $file_path))
+                    ->onQueue('import');
+            });
+        } catch (Exception $e) {
+            logger()->error('$e', [$e->getCode(), $e->getMessage()]);
+
+            return back()
+                ->with('alert.error', 'CSVアップロードに失敗しました。')
+                ->withInput();
+        }
+
+        return redirect()
+            ->back()
+            ->with('alert.success', 'CSVアップロード受け付けました。');
     }
 }

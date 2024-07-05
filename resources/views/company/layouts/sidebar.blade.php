@@ -18,6 +18,11 @@
                     <i class="ri-user-fill"></i><span>ユーザー管理</span>
                 </a>
             </li>
+            <li id="imports">
+                <a href="{{ route('company.imports.index') }}">
+                    <i class="fa fa-list-ul"></i><span>CSVインポート管理</span>
+                </a>
+            </li>
         </ul>
     </div>
     <!-- End Navigationbar -->
