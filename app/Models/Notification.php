@@ -30,4 +30,11 @@ class Notification extends Model
         }
     }
 
+    public function scopeEnabled($q)
+    {
+        return $q->where([
+            'is_active' => 1, // 有効
+        ]);
+    }
+
 }
