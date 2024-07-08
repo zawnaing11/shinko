@@ -24,6 +24,10 @@ class User extends Authenticatable
         'is_active',
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function setPasswordAttribute($value)
     {
         if (! empty($value)) {
