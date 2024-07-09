@@ -16,6 +16,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('cart_products', CartProductController::class)->only(['store']);
     Route::apiResource('orders', OrderController::class)->only(['index', 'show', 'store']);
     Route::apiResource('users', UserController::class)->only(['update']);
-    // お知らせ管理
     Route::apiResource('notifications', NotificationController::class)->only(['index', 'show']);
 });

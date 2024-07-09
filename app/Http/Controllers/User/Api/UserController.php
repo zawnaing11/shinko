@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Api\UserRequest;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
