@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class InvalidRequestException extends Exception
+class InvalidDataException extends Exception
 {
     //
 }

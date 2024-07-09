@@ -18,7 +18,6 @@ return new class extends Migration
             $table->boolean('result')->default(0)->comment('結果');
             $table->json('messages')->nullable()->comment('メッセージ');
             $table->dateTime('created_at');
-            $table->dateTime('updated_at');
 
             $table->foreign('import_id')->references('id')->on('imports')->onDelete('cascade')->onUpdate('cascade');
         });

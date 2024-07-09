@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Company;
 
 use App\Http\Requests\BaseFormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class FileUploadRequest extends BaseFormRequest
 {
@@ -28,5 +29,11 @@ class FileUploadRequest extends BaseFormRequest
         return [
             'import_file' => 'インポートファイル',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        return back()
+            ->with('alert.error', 'CSVアップロードに失敗しました。');
     }
 }

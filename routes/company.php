@@ -45,5 +45,5 @@ Route::middleware(['auth:company', 'is_active:company'])
         Route::resource('users', UserController::class)->except('show');
         // インポート
         Route::get('imports', [ImportController::class, 'index'])->name('imports.index');
-        Route::get('imports/{import}', [ImportDetailController::class, 'index'])->name('imports.show');
+        Route::get('imports/{import}/details', [ImportDetailController::class, 'index'])->name('imports.show');
     });

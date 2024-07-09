@@ -17,7 +17,7 @@ class ImportController extends Controller
                     $query->where('result', 1);
                 },
                 'details as fail_count' => function ($query) {
-                    $query->where('result', 0);
+                    $query->where('result', 10);
                 }
             ])
             ->orderBy('created_at', 'DESC');

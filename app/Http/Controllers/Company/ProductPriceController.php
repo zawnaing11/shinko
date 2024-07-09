@@ -13,11 +13,9 @@ use App\Models\Store;
 use App\Repositories\Company\ProductPriceRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class ProductPriceController extends Controller
 {
@@ -113,6 +111,8 @@ class ProductPriceController extends Controller
             'Content-Type' => 'application/octet-stream',
         ];
 
+        $file_name = '商品価格_' . date('Ymd_His') . '.csv';
+
         $callback = function () {
 
             $handle = fopen('php://output', 'w');
@@ -121,25 +121,25 @@ class ProductPriceController extends Controller
             stream_filter_prepend($handle, 'convert.iconv.utf-8/cp932//TRANSLIT');
 
             fputcsv($handle, [
-                'フラグ（1=登録、2=編集、3=削除）',
-                'ID（編集・削除時に使用）',
-                '店舗名',
+                'フラグ（1=削除）',
                 '店舗ID',
+                '店舗名',
                 'JANコード',
                 '商品名',
                 '定価価格（税抜）',
                 '販売価格（税抜）',
             ]);
 
-            BaseProduct::productPriceQuery()
-                ->orderBy('base_products.jan_cd')
+            $product_price_repository = new ProductPriceRepository();
+            $product_price_repository->all()
+                ->orderBy('store_id', 'ASC')
+                ->orderBy('base_products.jan_cd', 'ASC')
                 ->chunk(1000, function ($base_products) use ($handle) {
                     foreach ($base_products as $base_product) {
                         $values = [
                             'flag' => '',
-                            'product_price_id' => $base_product->product_price_id,
-                            'store_name' => $base_product->store_name,
                             'store_id' => $base_product->store_id,
+                            'store_name' => $base_product->store_name,
                             'jan_cd' => $base_product->jan_cd,
                             'product_name' => $base_product->product_name,
                             'list_price' => $base_product->list_price,
@@ -151,25 +151,12 @@ class ProductPriceController extends Controller
             fclose($handle);
         };
 
-        return response()->streamDownload($callback, 'product_prices.csv', $headers);
+        return response()->streamDownload($callback, $file_name, $headers);
     }
 
-    public function upload(Request $request)
+    public function upload(FileUploadRequest $request)
     {
-        $file_upload_request = new FileUploadRequest();
-        $validator = Validator::make(
-            $request->all(),
-            $file_upload_request->rules(),
-            [],
-            $file_upload_request->attributes()
-        );
-
-        if ($validator->fails()) {
-            return back()
-                ->with('alert.error', 'CSVアップロードに失敗しました。');
-        }
-
-        $import_file = $validator->validated()['import_file'];
+        $import_file = $request->validated()['import_file'];
 
         try {
             DB::transaction(function () use ($import_file) {
@@ -188,7 +175,6 @@ class ProductPriceController extends Controller
             });
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-
             return back()
                 ->with('alert.error', 'CSVアップロードに失敗しました。')
                 ->withInput();

@@ -52,7 +52,7 @@ return [
     'import_details' => [
         'results' => [
             1 => '成功',
-            0 => '失敗',
+            10 => '失敗',
         ],
         'default_paginate_number' => 200,
     ]
