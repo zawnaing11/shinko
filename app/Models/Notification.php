@@ -38,7 +38,7 @@ class Notification extends Model
         return $q->where([
             'is_active' => 1, // 有効
         ])
-        ->where('publish_date', '>=', $now);
+        ->where('publish_date', '<=', $now);
     }
 
 }
