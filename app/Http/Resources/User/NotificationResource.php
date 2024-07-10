@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationResource extends JsonResource
 {
-
     /**
      * Transform the resource into an array.
      *
@@ -18,7 +17,7 @@ class NotificationResource extends JsonResource
         return [
             'title' => $this->title,
             'body' => $this->body,
-            'image' => $this->image,
+            'image' => $this->image_url,
             'is_active' => $this->is_active,
             'publish_date' => $this->publish_date,
             'created_at' => $this->created_at,
