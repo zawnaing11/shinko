@@ -24,14 +24,11 @@ class NotificationController extends Controller
         if ($request->filled('title')) {
             $notifications->where('title', 'like', '%' . $request->title . '%');
         }
-        if ($request->filled('is_active')) {
-            $notifications->where('is_active', $request->is_active);
+        if ($request->filled('publish_begin_datetime')) {
+            $notifications->where('publish_begin_datetime', '>=', $request->publish_begin_datetime);
         }
-        if ($request->filled('publish_from')) {
-            $notifications->where('publish_date', '>=', $request->publish_from);
-        }
-        if ($request->filled('publish_to')) {
-            $notifications->where('publish_date', '<=', $request->publish_to);
+        if ($request->filled('publish_end_datetime')) {
+            $notifications->where('publish_end_datetime', '<=', $request->publish_end_datetime);
         }
         $notifications = $notifications->paginate(config('const.default_paginate_number'));
 

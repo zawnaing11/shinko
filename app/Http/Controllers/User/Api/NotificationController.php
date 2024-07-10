@@ -11,14 +11,14 @@ class NotificationController extends Controller
 {
     public function index(Request $request)
     {
-        $notifications = Notification::active()
+        $notifications = Notification::publishable()
             ->paginate(config('const.default_paginate_number'));
         return response()->json(NotificationResource::collection($notifications)->response()->getData());
     }
 
     public function show(string $id)
     {
-        $notification = Notification::where('id', $id)->active()->first();
+        $notification = Notification::where('id', $id)->publishable()->firstOrFail();
         return response()->json(new NotificationResource($notification));
     }
 }

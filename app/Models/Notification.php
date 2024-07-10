@@ -21,8 +21,8 @@ class Notification extends Model
         'title',
         'body',
         'image',
-        'is_active',
-        'publish_date',
+        'publish_begin_datetime',
+        'publish_end_datetime',
     ];
 
     protected $casts = [
@@ -36,10 +36,13 @@ class Notification extends Model
         }
     }
 
-    public function scopeActive(Builder $q): void
+    public function scopePublishable(Builder $q): void
     {
-        $q->where('is_active', 1)
-            ->where('publish_date', '<=', Carbon::now());
+        $now = Carbon::now();
+        $q->where([
+            ['publish_begin_datetime', '<=', $now],
+            ['publish_end_datetime', '>=', $now],
+        ]);
     }
 
 }

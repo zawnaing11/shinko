@@ -26,16 +26,30 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="publish_date">公開日時<span class="required">*</span></label>
+                                    <label for="publish_begin_datetime">公開開始日時<span class="required">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" id="publish_date" name="publish_date" class="datetime-format form-control @error('publish_date') is-invalid @enderror" value="{{ old('publish_date') }}" placeholder="YYYY-MM-DD HH:mm" required>
+                                        <input type="text" id="publish_begin_datetime" name="publish_begin_datetime" class="datetime-format form-control @error('publish_begin_datetime') is-invalid @enderror" value="{{ old('publish_begin_datetime') }}" placeholder="YYYY-MM-DD HH:mm" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>
-                                        @error('publish_date')
-                                            <div id="publish_date-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
+                                        @error('publish_begin_datetime')
+                                            <div id="publish_begin_datetime-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="publish_end_datetime">公開終了日時<span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" id="publish_end_datetime" name="publish_end_datetime" class="datetime-format form-control @error('publish_end_datetime') is-invalid @enderror" value="{{ old('publish_end_datetime') }}" placeholder="YYYY-MM-DD HH:mm" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                                        </div>
+                                        @error('publish_end_datetime')
+                                            <div id="publish_end_datetime-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -72,31 +86,6 @@
                                     @error('is_image')
                                     <div id="is_image-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
                                     @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label">有効/無効<span class="required">*</span></label>
-                                    <div>
-                                        @foreach (config('const.is_active') as $key => $value)
-                                            @if (old('is_active'))
-                                            <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if (old('is_active') == $key) checked @endif>
-                                                <label class="form-check-label" for="is_active_{{ $key }}">{{ $value }}</label>
-                                            </div>
-                                            @else
-                                            <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if ($key == 1) checked @endif>
-                                                <label class="form-check-label" for="is_active_{{ $key }}">{{ $value }}</label>
-                                            </div>
-                                            @endif
-                                        @endforeach
-                                        @error('is_active')
-                                        <div id="is_active-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
                                 </div>
                             </div>
                         </div>
