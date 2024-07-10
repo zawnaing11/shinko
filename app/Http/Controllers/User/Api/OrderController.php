@@ -91,6 +91,7 @@ class OrderController extends Controller
                         'price_tax' => $this->calcTax($base_product->price, $base_product->tax_rate),
                         'list_price' => $base_product->list_price,
                         'list_price_tax' => $this->calcTax($base_product->list_price, $base_product->tax_rate),
+                        'tax_rate' => $base_product->tax_rate,
                     ]);
                 }
 

@@ -24,6 +24,7 @@ class OrderProduct extends Model
         'price_tax',
         'list_price',
         'list_price_tax',
+        'tax_rate',
     ];
 
     public function order()

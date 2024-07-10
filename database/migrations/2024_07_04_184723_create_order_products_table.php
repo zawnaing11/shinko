@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('price_tax')->nullable()->comment('税込販売価格');
             $table->integer('list_price')->comment('税抜販売価格');
             $table->integer('list_price_tax')->comment('税込販売価格');
+            $table->decimal('tax_rate', 5, 2)->default(0.00)->comment('消費税率');
             $table->dateTimes();
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
