@@ -105,7 +105,7 @@ class OrderController extends Controller
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            abort(500);
+            abort($e->getCode(), $e->getMessage());
         }
 
         return response()->json([], 201);

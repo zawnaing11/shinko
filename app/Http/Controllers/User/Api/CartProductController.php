@@ -13,14 +13,14 @@ use Exception;
 
 class CartProductController extends Controller
 {
-    public function store(CartProductRequest $request)
+    public function store(CartProductRequest $request, Cart $cart)
     {
         $validated = $request->validated();
 
         try {
-            $cart = Cart::find($validated['cart_id']);
-            if ($cart === null) {
-                throw new InvalidRequestException('カートが存在していません。');
+            // ユーザーのカートかチェック
+            if ($request->user()->id != $cart->user_id) {
+                throw new Exception('Not Found.', 404);
             }
 
             // JANコードが存在するかチェック
@@ -35,13 +35,13 @@ class CartProductController extends Controller
 
             if (empty($validated['quantity'])) {
                 CartProduct::where([
-                    'cart_id' => $validated['cart_id'],
+                    'cart_id' => $cart->id,
                     'jan_cd' => $validated['jan_cd'],
                 ])->delete();
 
             } else {
                 $result = CartProduct::updateOrCreate([
-                    'cart_id' => $validated['cart_id'],
+                    'cart_id' => $cart->id,
                     'jan_cd' => $validated['jan_cd'],
                 ], $validated);
             }
@@ -56,7 +56,7 @@ class CartProductController extends Controller
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            abort(500);
+            abort($e->getCode(), $e->getMessage());
         }
 
         return response()->json($result);

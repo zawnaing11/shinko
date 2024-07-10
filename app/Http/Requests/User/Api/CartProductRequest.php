@@ -14,10 +14,6 @@ class CartProductRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'cart_id' => [
-                'required',
-                'uuid',
-            ],
             'jan_cd' => [
                 'required',
                 'numeric',
@@ -39,7 +35,6 @@ class CartProductRequest extends ApiFormRequest
     public function attributes()
     {
         return [
-            'cart_id' => 'カートID',
             'jan_cd' => 'JANコード',
             'quantity' => '数量',
         ];

@@ -12,12 +12,11 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         try {
-            // ユーザーを更新
             $user->fill($request->validated())->save();
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            abort(500);
+            abort($e->getCode(), $e->getMessage());
         }
 
         return response()->json($user);
