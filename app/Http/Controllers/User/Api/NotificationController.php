@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\NotificationResource;
 use App\Models\Notification;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -18,13 +17,9 @@ class NotificationController extends Controller
         return response()->json(NotificationResource::collection($notifications)->response()->getData());
     }
 
-    public function show(Notification $notification)
+    public function show(string $id)
     {
-        $now = Carbon::now();
-        if ($notification->is_active !== 1 || $notification->publish_date <= $now) {
-            abort(404);
-        }
-
+        $notification = Notification::where('id', $id)->active()->first();
         return response()->json(new NotificationResource($notification));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,14 +32,10 @@ class Notification extends Model
         }
     }
 
-    public function scopeActive($q)
+    public function scopeActive(Builder $q): void
     {
-        $now = Carbon::now();
-
-        return $q->where([
-            'is_active' => 1, // 有効
-        ])
-        ->where('publish_date', '<=', $now);
+        $q->where('is_active', 1)
+            ->where('publish_date', '<=', Carbon::now());
     }
 
 }
