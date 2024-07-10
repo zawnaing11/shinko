@@ -3,8 +3,6 @@
 namespace App\Repositories\Company;
 
 use App\Models\BaseProduct;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductPriceRepository
@@ -20,7 +18,6 @@ class ProductPriceRepository
                     ->on('product_prices.store_id', '=', 'store.id');
             })
             ->current() // TODO base_productsにマッチしないが、product_pricesに存在する場合、どのように扱うか？
-            ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
             ->select(
                 'product_prices.id as product_price_id',
                 'store.id as store_id',

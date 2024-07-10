@@ -3,17 +3,19 @@
 namespace App\Jobs;
 
 use App\Exceptions\ArrayException;
-use App\Exceptions\InvalidDataException;
+use App\Exceptions\ImportException;
 use App\Http\Requests\Company\ProductPriceRequest;
 use App\Models\BaseProduct;
 use App\Models\ImportDetail;
 use App\Models\ProductPrice;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +24,8 @@ class ProductPriceImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $row_num = 2;
+    private $header_num = 1;
+    private $row_num;
     private $file_path;
     private $import;
 
@@ -36,13 +39,10 @@ class ProductPriceImportJob implements ShouldQueue
     {
         Log::setDefaultDriver('csv_import');
 
-        logger()->info('Line info', [
-            'row_num' => $this->row_num,
-            'import_id' => $this->import->id,
-        ]);
+        logger()->info('Import Start', $this->import->toArray());
 
         // 処理中
-        $this->import->fill(['status' => 2])->save();
+        $this->storeImport(2);
 
         $cols = array_flip([
             0 => 'flag',
@@ -54,95 +54,109 @@ class ProductPriceImportJob implements ShouldQueue
         try {
             // ファイル存在確認
             if (! Storage::exists($this->file_path)) {
-                throw new InvalidDataException($this->import->file_name . ' が存在しません。');
+                throw new ImportException($this->import->file_name . ' が存在していません。');
             }
 
             $file = new \SplFileObject(storage_path('app/' . $this->file_path));
             $file->setFlags(
                 \SplFileObject::READ_CSV |
-                \SplFileObject::READ_AHEAD
+                \SplFileObject::READ_AHEAD |
+                \SplFileObject::SKIP_EMPTY |
+                \SplFileObject::DROP_NEW_LINE
             );
 
             foreach ($file as $row) {
+                $this->row_num = $file->key() + 1;
+                logger()->info('row info', [$this->row_num]);
+
                 // ヘッダー行スキップ
-                if (($file->key() + 1) < $this->row_num) {
+                if ($file->key() < $this->header_num) {
                     continue;
                 }
                 try {
-                    // for empty and new line row
-                    if (count($row) == 1) {
-                        throw new InvalidDataException('フラグが存在しません。');
-                    }
+                    DB::transaction(function () use ($row, $cols) {
+                        $store_id = $row[$cols['store_id']];
+                        $jan_cd = $row[$cols['jan_cd']];
 
-                    // 商品が存在するかチェック
-                    $base_products = BaseProduct::with([
-                        'storeBases' => function ($q) use ($row, $cols) {
-                            return $q->where('store_id', $row[$cols['store_id']]);
-                        }])
-                        ->where('jan_cd', $row[$cols['jan_cd']])
-                        ->exists();
-                    if (! $base_products) {
-                        throw new InvalidDataException('商品が存在しません。');
-                    }
-
-                    if ($row[$cols['flag']] == 1) {
-                        // 商品価格が存在するかチェック
-                        $product_price = ProductPrice::where([
-                                ['store_id', '=', $row[$cols['store_id']]],
-                                ['jan_cd', '=', $row[$cols['jan_cd']]],
-                            ])
-                            ->first();
-                        if ($product_price === null) {
-                            throw new InvalidDataException('商品価格が存在しません。');
+                        // 商品が存在するかチェック
+                        $base_products = BaseProduct::where('jan_cd', $jan_cd)
+                            ->current()
+                            ->whereHas('storeBases', function ($q) use ($store_id) {
+                                $q->where('store_id', $store_id);
+                            })
+                            ->exists();
+                        if (! $base_products) {
+                            throw new ImportException('商品が存在していません。');
                         }
 
-                        $product_price->delete();
-                        logger()->info('Delete $product_price');
-                    } else {
-                        $this->validation(['price' => $row[$cols['price']]]);
+                        if ($row[$cols['flag']] == 1) {
+                            // 商品価格が存在するかチェック
+                            $product_price = ProductPrice::where([
+                                    ['store_id', '=', $store_id],
+                                    ['jan_cd', '=', $jan_cd],
+                                ])
+                                ->first();
+                            if ($product_price === null) {
+                                throw new ImportException('商品価格が存在していません。');
+                            }
+                            $product_price->delete();
+                        } else {
+                            $validated = $this->validation(['price' => $row[$cols['price']]]);
+                            ProductPrice::updateOrCreate(
+                                [
+                                    'store_id' => $store_id,
+                                    'jan_cd' => $jan_cd,
+                                ],
+                                [
+                                    'price' => $validated['price'],
+                                ]
+                            );
+                        }
 
-                        $product_price = ProductPrice::updateOrCreate(
-                            [
-                                'store_id' => $row[$cols['store_id']],
-                                'jan_cd' => $row[$cols['jan_cd']],
-                            ],
-                            [
-                                'price' => $row[$cols['price']],
-                            ]
-                        );
-                        logger()->info('Update $product_price');
-                    }
-
-                    $this->storeImportDetail(1);
-
-                } catch (InvalidDataException $e) {
+                        $this->storeImportDetail(1);
+                    });
+                } catch (ImportException $ie) {
+                    logger()->info('$ie', [$ie->getCode(), $ie->getMessage()]);
+                    $this->storeImportDetail(10, [$ie->getMessage()]);
+                } catch (ArrayException $ae) {
+                    logger()->info('$ae', [$ae->getCode(), $ae->getMessages()]);
+                    $this->storeImportDetail(10, $ae->getMessages());
+                } catch (Exception $e) {
                     logger()->error('$e', [$e->getCode(), $e->getMessage()]);
                     $this->storeImportDetail(10, [$e->getMessage()]);
-                } catch (ArrayException $ae) {
-                    logger()->error('$e', [$ae->getCode(), $ae->getMessages()]);
-                    $this->storeImportDetail(10, $ae->getMessages());
                 }
             }
             // 完了
-            $this->import->fill(['status' => 3])->save();
+            $this->storeImport(3);
 
             Storage::delete($this->file_path);
-
-        } catch (InvalidDataException $e) {
+        } catch (ImportException $ie) {
+            logger()->info('$ie', [$ie->getCode(), $ie->getMessage()]);
+            // 失敗
+            $this->storeImport(10, [$ie->getMessage()]);
+        } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
             // 失敗
-            $this->import->fill([
-                'status' => 10,
-                'messages' => [$e->getMessage()]
-            ]) ->save();
+            $this->storeImport(10);
         }
+
+        logger()->info('Import End', $this->import->toArray());
+    }
+
+    private function storeImport(int $status, array $messages = [])
+    {
+        $this->import->fill([
+            'status' => $status,
+            'messages' => $messages
+        ])
+        ->save();
     }
 
     private function storeImportDetail(int $result, array $messages = [])
     {
         return ImportDetail::create([
             'import_id' => $this->import->id,
-            'line_number' => $this->row_num++,
+            'line_number' => $this->row_num,
             'result' => $result,
             'messages' => $messages,
             'created_at' => Carbon::now(),
@@ -157,5 +171,7 @@ class ProductPriceImportJob implements ShouldQueue
         if ($validator->fails()) {
             throw new ArrayException($validator->messages()->all());
         }
+
+        return $validator->validated();
     }
 }

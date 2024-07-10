@@ -5,7 +5,7 @@
 <div class="contentbar">
     <div class="row">
         <div class="col-lg-12">
-            <form method="GET" class="form-search" action="{{ route('company.imports.show', $import->id) }}" autocomplete="off">
+            <form method="GET" class="form-search" action="{{ route('company.imports.details.index', request()->import->id) }}" autocomplete="off">
                 <div class="card m-b-30" id="search_box">
                     <div class="card-header collapsed" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" style="cursor: pointer;">
                         <h5 class="card-title">検索</h5>

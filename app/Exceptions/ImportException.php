@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class InvalidDataException extends Exception
+class ImportException extends Exception
 {
     //
 }

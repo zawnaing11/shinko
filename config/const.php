@@ -1,7 +1,7 @@
 <?php
 
 $upload_image_extensions = ['jpeg', 'jpg', 'png', 'tiff', 'heic'];
-$upload_csv_extensions = ['csv', 'txt'];
+$upload_csv_extensions = ['csv'];
 
 return [
     // common

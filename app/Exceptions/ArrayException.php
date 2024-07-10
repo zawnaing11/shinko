@@ -6,8 +6,6 @@ use Exception;
 
 class ArrayException extends Exception
 {
-    protected $message = '例外処理が走りました。';
-
     public function __construct(array $message = null, int $code = 0, Exception $previous = null) {
         parent::__construct(json_encode($message), $code, $previous);
     }

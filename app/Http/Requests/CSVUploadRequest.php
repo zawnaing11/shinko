@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Company;
+namespace App\Http\Requests;
 
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class FileUploadRequest extends BaseFormRequest
+class CSVUploadRequest extends BaseFormRequest
 {
 
     /**

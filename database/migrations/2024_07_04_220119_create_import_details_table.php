@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('import_id')->comment('インポートID');
             $table->unsignedMediumInteger('line_number')->comment('行番号');
             $table->boolean('result')->default(0)->comment('結果');
-            $table->json('messages')->nullable()->comment('メッセージ');
+            $table->json('messages')->comment('メッセージ');
             $table->dateTime('created_at');
 
             $table->foreign('import_id')->references('id')->on('imports')->onDelete('cascade')->onUpdate('cascade');

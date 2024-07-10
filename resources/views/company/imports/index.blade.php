@@ -82,7 +82,7 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            <a href="{{ route('company.imports.show', $import->id) }}" class="btn btn-info btn-sm @if ($import->status != 3) disabled @endif">詳細</a>
+                                            <a href="{{ route('company.imports.details.index', $import->id) }}" class="btn btn-info btn-sm @if ($import->status != 3) disabled @endif">詳細</a>
                                         </td>
                                     </tr>
                         @if ($loop->last)

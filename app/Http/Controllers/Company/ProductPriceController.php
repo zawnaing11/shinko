@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Company\FileUploadRequest;
 use App\Http\Requests\Company\ProductPriceRequest;
+use App\Http\Requests\CSVUploadRequest;
 use App\Jobs\ProductPriceImportJob;
 use App\Models\BaseProduct;
 use App\Models\Import;
@@ -53,7 +53,6 @@ class ProductPriceController extends Controller
     public function edit(int $store_id, string $jan_cd, ProductPriceRepository $product_price_repository)
     {
         $base_product = $product_price_repository->all()
-            ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
             ->where([
                 ['store.id', $store_id],
                 ['base_products.jan_cd', $jan_cd]
@@ -76,9 +75,11 @@ class ProductPriceController extends Controller
     public function update(int $store_id, string $jan_cd, ProductPriceRequest $request)
     {
         // 商品が存在するかチェック
-        $base_products = BaseProduct::with(['storeBases' => function ($q) use ($store_id) {
-            return $q->where('store_id', $store_id);
-        }])->where('jan_cd', $jan_cd);
+        $base_products = BaseProduct::where('jan_cd', $jan_cd)
+            ->current()
+            ->whereHas('storeBases', function ($q) use ($store_id) {
+                $q->where('store_id', $store_id);
+            });
         if ($base_products->doesntExist()) {
             abort(400);
         }
@@ -105,7 +106,7 @@ class ProductPriceController extends Controller
         return back()->with('alert.success', '商品価格を削除しました。');
     }
 
-    public function export()
+    public function export(ProductPriceRepository $product_price_repository)
     {
         $headers = [
             'Content-Type' => 'application/octet-stream',
@@ -113,7 +114,7 @@ class ProductPriceController extends Controller
 
         $file_name = '商品価格_' . date('Ymd_His') . '.csv';
 
-        $callback = function () {
+        $callback = function () use ($product_price_repository) {
 
             $handle = fopen('php://output', 'w');
 
@@ -121,7 +122,7 @@ class ProductPriceController extends Controller
             stream_filter_prepend($handle, 'convert.iconv.utf-8/cp932//TRANSLIT');
 
             fputcsv($handle, [
-                'フラグ（1=削除）',
+                '削除（1=削除）',
                 '店舗ID',
                 '店舗名',
                 'JANコード',
@@ -130,7 +131,6 @@ class ProductPriceController extends Controller
                 '販売価格（税抜）',
             ]);
 
-            $product_price_repository = new ProductPriceRepository();
             $product_price_repository->all()
                 ->orderBy('store_id', 'ASC')
                 ->orderBy('base_products.jan_cd', 'ASC')
@@ -154,7 +154,7 @@ class ProductPriceController extends Controller
         return response()->streamDownload($callback, $file_name, $headers);
     }
 
-    public function upload(FileUploadRequest $request)
+    public function upload(CSVUploadRequest $request)
     {
         $import_file = $request->validated()['import_file'];
 
