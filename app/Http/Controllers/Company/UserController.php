@@ -24,8 +24,8 @@ class UserController extends Controller
         if ($request->filled('name')) {
             $users->where('name', 'like', '%' . $request->name . '%');
         }
-        if ($request->filled('is_active')) {
-            $users->where('is_active', $request->is_active);
+        if ($request->filled('retirement_date')) {
+            $users->where('retirement_date', '>=', $request->retirement_date);
         }
 
         $users = $users->paginate(config('const.default_paginate_number'));

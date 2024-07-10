@@ -32,9 +32,9 @@ class UserRequest extends BaseFormRequest
                     }
                 },
             ],
-            'is_active' => [
-                'required',
-                'in:' . implode(',', array_keys(config('const.is_active'))),
+            'retirement_date' => [
+                'nullable',
+                'date_format:Y-m-d'
             ],
         ];
     }
@@ -45,7 +45,7 @@ class UserRequest extends BaseFormRequest
             'email' => 'Eメールアドレス',
             'password' => 'パスワード',
             'name' => '氏名',
-            'is_active' => '有効/無効',
+            'retirement_date' => '退職日',
         ];
     }
 

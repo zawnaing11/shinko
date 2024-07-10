@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Api\LoginRequest;
 use App\Models\Cart;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +15,11 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $validated = $request->validated();
-        if (Auth::attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
+        if (Auth::attempt([
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            fn (Builder $query) => $query->where('retirement_date', '>=', Carbon::now()),
+        ])) {
             $user = Auth::user();
             $token = $user->createToken($user->id)->plainTextToken;
             return response()->json(['token' => $token]);

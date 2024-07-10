@@ -1,5 +1,9 @@
 @extends('company.layouts.main')
 @section('title', 'ユーザー管理')
+@section('styles')
+<!-- Datepicker css -->
+<link href="{{ asset('assets/admin/plugins/datepicker/datepicker.min.css') }}" rel="stylesheet" type="text/css">
+@endsection
 @section('widgetbar')
 <a href="{{ route('company.users.create') }}" class="btn btn-outline-primary"><i class="ri-add-line align-middle mr-2"></i>登録</a>
 @endsection
@@ -30,21 +34,11 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-group">
-                                        <div>
-                                            <label for="is_active">有効/無効</label>
-                                        </div>
-                                        <div class="form-check-inline">
-                                            <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_1" name="is_active" class="form-check-input default" value="" {{ request()->is_active == '' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="is_active_1">全て</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_2" name="is_active" class="form-check-input" value="1" {{ request()->is_active ? 'checked' : '' }}>
-                                                <label for="is_active_2" class="form-check-label">有効</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input type="radio" id="is_active_3" name="is_active" class="form-check-input" value="0" {{ request()->is_active == '' ? '' : (request()->is_active == 0 ? 'checked' : '') }}>
-                                                <label for="is_active_3" class="form-check-label">無効</label>
+                                        <label for="retirement_date">退職日</label>
+                                        <div class="input-group">
+                                            <input type="text" id="retirement_date" name="retirement_date" class="date-format form-control" value="{{ request()->retirement_date }}" placeholder="YYYY-MM-DD">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +70,7 @@
                                     <tr>
                                         <th>Eメールアドレス</th>
                                         <th>氏名</th>
-                                        <th>有効/無効</th>
+                                        <th>退職日</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
@@ -85,7 +79,7 @@
                                     <tr>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ Str::limit($user->name, 20) }}</td>
-                                        <td>{{ config('const.is_active.' . $user->is_active) }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($user->retirement_date)->format('Y-m-d') }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('company.users.destroy', $user->id) }}">
                                                 @csrf
@@ -119,5 +113,11 @@
     </div>
 </div>
 
+@endsection
+@section('js')
+<!-- Datepicker JS -->
+<script src="{{ asset('assets/admin/plugins/datepicker/datepicker.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/datepicker/i18n/datepicker.ja.js') }}"></script>
+<script src="{{ asset('assets/admin/js/datepicker-format.js') }}"></script>
 @endsection
 
