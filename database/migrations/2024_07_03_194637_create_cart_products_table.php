@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_prices', function (Blueprint $table) {
+        Schema::create('cart_products', function (Blueprint $table) {
             $table->uuid('id')->primary()->comment('ID');
-            $table->integer('store_id')->comment('店舗ID');
+            $table->foreignUuid('cart_id')->comment('カートID');
             $table->char('jan_cd', length: 20)->comment('JANコード');
-            $table->integer('price')->comment('税抜販売価格');
+            $table->unsignedTinyInteger('quantity')->comment('数量');
             $table->dateTimes();
 
-            $table->unique(['store_id', 'jan_cd']);
+            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->unique(['cart_id', 'jan_cd']);
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_prices');
+        Schema::dropIfExists('cart_products');
     }
 };

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\NotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('guest:admin')
-    ->controller(LoginController::class)
+    ->controller(AuthController::class)
     ->group(function () {
         Route::get('login', 'login')->name('login');
         Route::post('authenticate', 'authenticate')->name('authenticate');
@@ -24,7 +24,7 @@ Route::middleware('guest:admin')
 
 Route::middleware(['auth:admin', 'is_active:admin'])
     ->group(function () {
-        Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/', function () {
             return redirect()->route('admin.notifications.index');
         });
