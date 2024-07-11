@@ -61,7 +61,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="" class="form-label">本文</label>
-                                    <textarea id="body" name="body" class="form-control @error('body') is-invalid @enderror" placeholder="本文" cols="30" rows="5" maxlength="{{ config('const.default_textarea_maxlength') }}">{{ old('body') }}</textarea>
+                                    <textarea id="body" name="body" class="form-control @error('body') is-invalid @enderror" placeholder="本文" cols="30" rows="10" maxlength="{{ config('const.default_textarea_maxlength') }}">{{ old('body') }}</textarea>
                                     @error('body')
                                     <div id="body-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror

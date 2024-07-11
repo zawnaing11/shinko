@@ -25,7 +25,11 @@ class UserController extends Controller
             $users->where('name', 'like', '%' . $request->name . '%');
         }
         if ($request->filled('retirement_date')) {
-            $users->where('retirement_date', '>=', $request->retirement_date);
+            if ($request->retirement_date == 0) {
+                $users->whereNull('retirement_date');
+            } else {
+                $users->whereNotNull('retirement_date');
+            }
         }
 
         $users = $users->paginate(config('const.default_paginate_number'));

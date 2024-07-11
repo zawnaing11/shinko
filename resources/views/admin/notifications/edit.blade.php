@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label for="publish_begin_datetime">公開開始日時<span class="required">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" id="publish_begin_datetime" name="publish_begin_datetime" class="datetime-format form-control @error('publish_begin_datetime') is-invalid @enderror" value="{{ old('publish_begin_datetime', $notification->publish_begin_datetime ? date('Y-m-d H:i', strtotime($notification->publish_begin_datetime)) : "") }}" placeholder="YYYY-MM-DD HH:mm" required>
+                                        <input type="text" id="publish_begin_datetime" name="publish_begin_datetime" class="datetime-format form-control @error('publish_begin_datetime') is-invalid @enderror" value="{{ old('publish_begin_datetime', $notification->publish_begin_datetime?->format('Y-m-d H:i')) }}" placeholder="YYYY-MM-DD HH:mm" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>
@@ -47,7 +47,7 @@
                                 <div class="form-group">
                                     <label for="publish_end_datetime">公開終了日時</label>
                                     <div class="input-group">
-                                        <input type="text" id="publish_end_datetime" name="publish_end_datetime" class="datetime-format form-control @error('publish_end_datetime') is-invalid @enderror" value="{{ old('publish_end_datetime', $notification->publish_end_datetime ? date('Y-m-d H:i', strtotime($notification->publish_end_datetime)) : "") }}" placeholder="YYYY-MM-DD HH:mm">
+                                        <input type="text" id="publish_end_datetime" name="publish_end_datetime" class="datetime-format form-control @error('publish_end_datetime') is-invalid @enderror" value="{{ old('publish_end_datetime', $notification->publish_end_datetime?->format('Y-m-d H:i')) }}" placeholder="YYYY-MM-DD HH:mm">
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>
@@ -62,7 +62,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="" class="form-label">本文</label>
-                                    <textarea id="body" name="body" class="form-control @error('body') is-invalid @enderror" placeholder="本文" cols="30" rows="5" maxlength="{{ config('const.default_textarea_maxlength') }}">{{ old('body', $notification->body) }}</textarea>
+                                    <textarea id="body" name="body" class="form-control @error('body') is-invalid @enderror" placeholder="本文" cols="30" rows="10" maxlength="{{ config('const.default_textarea_maxlength') }}">{{ old('body', $notification->body) }}</textarea>
                                     @error('body')
                                     <div id="body-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror

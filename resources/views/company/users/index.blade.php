@@ -32,13 +32,23 @@
                                         <input type="text" id="name" name="name" class="form-control" value="{{ request()->name }}" placeholder="氏名">
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-6">
                                     <div class="form-group">
-                                        <label for="retirement_date">退職日</label>
-                                        <div class="input-group">
-                                            <input type="text" id="retirement_date" name="retirement_date" class="date-format form-control" value="{{ request()->retirement_date }}" placeholder="YYYY-MM-DD">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                                        <div>
+                                            <label for="retirement_date">退職</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="retirement_date_1" name="retirement_date" class="form-check-input default" value="" {{ request()->retirement_date == '' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="retirement_date_1">すべて</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="retirement_date_2" name="retirement_date" class="form-check-input" value="0" {{ request()->retirement_date == '' ? '' : (request()->retirement_date == 0 ? 'checked' : '') }}>
+                                                <label for="retirement_date_2" class="form-check-label">未退職者</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="retirement_date_3" name="retirement_date" class="form-check-input" value="1" {{ request()->retirement_date ? 'checked' : '' }}>
+                                                <label for="retirement_date_3" class="form-check-label">退職者</label>
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +89,7 @@
                                     <tr>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ Str::limit($user->name, 20) }}</td>
-                                        <td>{{ $user->retirement_date ? date('Y-m-d', strtotime($user->retirement_date)) : '' }}</td>
+                                        <td>{{ $user->retirement_date?->format('Y-m-d') }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('company.users.destroy', $user->id) }}">
                                                 @csrf

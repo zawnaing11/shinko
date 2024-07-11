@@ -28,6 +28,10 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $casts = [
+        'retirement_date' => 'date',
+    ];
+
     public function setPasswordAttribute($value)
     {
         if (! empty($value)) {

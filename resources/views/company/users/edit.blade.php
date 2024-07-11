@@ -51,7 +51,7 @@
                                 <div class="form-group">
                                     <label for="retirement_date">退職日</label>
                                     <div class="input-group">
-                                        <input type="text" id="retirement_date" name="retirement_date" class="date-format form-control @error('retirement_date') is-invalid @enderror" value="{{ old('retirement_date', $user->retirement_date ? date('Y-m-d', strtotime($user->retirement_date)) : "") }}" placeholder="YYYY-MM-DD">
+                                        <input type="text" id="retirement_date" name="retirement_date" class="date-format form-control @error('retirement_date') is-invalid @enderror" value="{{ old('retirement_date', $user->retirement_date?->format('Y-m-d')) }}" placeholder="YYYY-MM-DD">
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>

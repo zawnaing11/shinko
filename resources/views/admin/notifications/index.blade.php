@@ -82,8 +82,8 @@
                         @endif
                                     <tr>
                                         <td>{{ Str::limit($notification->title, 60) }}</td>
-                                        <td>{{ date('Y-m-d H:i', strtotime($notification->publish_begin_datetime)) }}</td>
-                                        <td>{{ $notification->publish_end_datetime ? date('Y-m-d H:i', strtotime($notification->publish_end_datetime)) : '' }}</td>
+                                        <td>{{ $notification->publish_begin_datetime->format('Y-m-d H:i') }}</td>
+                                        <td>{{ $notification->publish_end_datetime?->format('Y-m-d H:i') }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('admin.notifications.destroy', $notification->id) }}">
                                                 @csrf
