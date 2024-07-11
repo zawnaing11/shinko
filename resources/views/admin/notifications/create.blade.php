@@ -26,7 +26,9 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-3">
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="publish_begin_datetime">公開開始日時<span class="required">*</span></label>
                                     <div class="input-group">
@@ -40,11 +42,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <label for="publish_end_datetime">公開終了日時<span class="required">*</span></label>
+                                    <label for="publish_end_datetime">公開終了日時</label>
                                     <div class="input-group">
-                                        <input type="text" id="publish_end_datetime" name="publish_end_datetime" class="datetime-format form-control @error('publish_end_datetime') is-invalid @enderror" value="{{ old('publish_end_datetime') }}" placeholder="YYYY-MM-DD HH:mm" required>
+                                        <input type="text" id="publish_end_datetime" name="publish_end_datetime" class="datetime-format form-control @error('publish_end_datetime') is-invalid @enderror" value="{{ old('publish_end_datetime') }}" placeholder="YYYY-MM-DD HH:mm">
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>
@@ -73,11 +75,9 @@
                                     <label for="">画像</label>
                                     <input type="hidden" id="is_image" name="is_image" value="{{ old('is_image') }}">
                                     <input type="file" id="image" name="image" class="image_upload" data-role="none" hidden accept="{{ implode(',', config('const.accept_image_extensions')) }}">
-                                    <div class="col-6 pl-0">
-                                        <img class="preview_image @if (empty(old('is_image'))) d-none @endif w-100" src="{{ old('is_image') ? \Storage::url(config('const.notifications.tmp_path') . old('is_image')) : '#' }}">
-                                        <div class="buttons text-center mt-3 @if (empty(old('is_image'))) d-none @endif">
-                                            <button type="button" class="btn btn-danger image_delete_btn">画像削除</button>
-                                        </div>
+                                    <img class="preview_image @if (empty(old('is_image'))) d-none @endif w-100" src="{{ old('is_image') ? \Storage::url(config('const.notifications.tmp_path') . old('is_image')) : '#' }}">
+                                    <div class="buttons text-center mt-3 @if (empty(old('is_image'))) d-none @endif">
+                                        <button type="button" class="btn btn-danger image_delete_btn">画像削除</button>
                                     </div>
                                     <button type="button" class="btn btn-primary-rgba btn-lg btn-block mt-3 image_upload_btn @if (! empty(old('is_image'))) d-none @endif">画像アップロード</button>
                                     @error('image')

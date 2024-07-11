@@ -79,7 +79,7 @@
                                     <tr>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ Str::limit($user->name, 20) }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($user->retirement_date)->format('Y-m-d') }}</td>
+                                        <td>{{ $user->retirement_date ? date('Y-m-d', strtotime($user->retirement_date)) : '' }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('company.users.destroy', $user->id) }}">
                                                 @csrf

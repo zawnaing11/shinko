@@ -37,7 +37,7 @@ class NotificationRequest extends BaseFormRequest
                 'date_format:Y-m-d H:i'
             ],
             'publish_end_datetime' => [
-                'required',
+                'nullable',
                 'date_format:Y-m-d H:i',
                 'after_or_equal:publish_begin_datetime'
             ],
