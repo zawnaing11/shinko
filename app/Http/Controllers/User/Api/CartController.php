@@ -17,9 +17,8 @@ class CartController extends Controller
 {
     use TaxTrait;
 
-    public function index(Request $request)
+    public function index(Request $request, CartRepository $cart_repository)
     {
-        $cart_repository = new CartRepository();
         $result = $cart_repository->all();
         return response()->json($result);
     }

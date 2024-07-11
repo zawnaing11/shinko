@@ -18,11 +18,11 @@ class NotificationResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
-            'image_url' => $request->schemeAndHttpHost() . $this->image_url,
+            'image_url' => url($this->image_url),
             'is_active' => $this->is_active,
-            'publish_date' => $this->publish_date,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'publish_date' => $this->publish_date->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }

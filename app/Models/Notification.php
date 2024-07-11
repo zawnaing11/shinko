@@ -25,6 +25,10 @@ class Notification extends Model
         'publish_date',
     ];
 
+    protected $casts = [
+        'publish_date' => 'datetime',
+    ];
+
     public function getImageUrlAttribute()
     {
         if ($this->image) {
