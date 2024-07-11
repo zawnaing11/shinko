@@ -13,7 +13,6 @@ class NotificationController extends Controller
     {
         $notifications = Notification::active()
             ->paginate(config('const.default_paginate_number'));
-
         return response()->json(NotificationResource::collection($notifications)->response()->getData());
     }
 

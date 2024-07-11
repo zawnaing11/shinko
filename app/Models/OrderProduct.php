@@ -27,6 +27,10 @@ class OrderProduct extends Model
         'tax_rate',
     ];
 
+    protected $attributes = [
+        'tax_rate' => 0.00,
+    ];
+
     public function order()
     {
         return $this->belongsTo(Order::class);

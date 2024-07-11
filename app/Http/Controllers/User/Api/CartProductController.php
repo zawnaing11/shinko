@@ -13,7 +13,7 @@ use Exception;
 
 class CartProductController extends Controller
 {
-    public function store(CartProductRequest $request, Cart $cart)
+    public function store(Cart $cart, CartProductRequest $request, CartRepository $cart_repository)
     {
         $validated = $request->validated();
 
@@ -47,7 +47,6 @@ class CartProductController extends Controller
             }
 
             // 現在のカートの中身を返却
-            $cart_repository = new CartRepository();
             $result = $cart_repository->all();
 
         } catch (InvalidRequestException $ire) {
