@@ -15,14 +15,13 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $validated = $request->validated();
-        $today = Carbon::now()->format('Y-m-d');
         if (Auth::attempt([
             'email' => $validated['email'],
             'password' => $validated['password'],
-            fn (Builder $query) => $query->where(function ($q) use ($today) {
-                                            $q->whereNull('retirement_date')
-                                                ->orWhere('retirement_date', '>=', $today);
-                                        })
+            fn (Builder $query) => $query->where(function ($q) {
+                $q->whereNull('retirement_date')
+                    ->orWhere('retirement_date', '>=', Carbon::today());
+            })
         ])) {
             $user = Auth::user();
             $token = $user->createToken($user->id)->plainTextToken;

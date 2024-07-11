@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::table('notifications', function (Blueprint $table) {
             $table->dropColumn('is_active');
+            $table->renameColumn('publish_date', 'publish_begin_datetime');
             $table->dateTime('publish_end_datetime')->nullable()->after('publish_date')->comment('公開終了日時');
         });
 
-        DB::statement('ALTER TABLE notifications CHANGE publish_date publish_begin_datetime DATETIME NOT NULL COMMENT \'公開開始日時\';');
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->dateTime('publish_begin_datetime')->comment('公開開始日時')->change();
+        });
     }
 
     /**
@@ -26,9 +29,12 @@ return new class extends Migration
     {
         Schema::table('notifications', function (Blueprint $table) {
             $table->dropColumn('publish_end_datetime');
+            $table->renameColumn('publish_begin_datetime', 'publish_date');
             $table->boolean('is_active')->default(1)->after('image')->comment('有効/無効');
         });
 
-        DB::statement('ALTER TABLE notifications CHANGE publish_begin_datetime publish_date DATETIME COMMENT \'公開日時\';');
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->dateTime('publish_date')->comment('公開日時')->change();
+        });
     }
 };
