@@ -10,8 +10,6 @@ use App\Models\Store;
 use App\Repositories\Company\ProductPriceRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class ProductPriceController extends Controller
 {
@@ -20,7 +18,8 @@ class ProductPriceController extends Controller
      */
     public function index(Request $request, ProductPriceRepository $product_price_repository)
     {
-        $base_products = $product_price_repository->all();
+        $base_products = $product_price_repository->all()
+            ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id);
 
         if ($request->filled('store_name')) {
             $base_products->where('store.id', $request->store_name);
@@ -45,9 +44,10 @@ class ProductPriceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductPriceRepository $product_price_repository, int $store_id, string $jan_cd)
+    public function edit(int $store_id, string $jan_cd, ProductPriceRepository $product_price_repository)
     {
         $base_product = $product_price_repository->all()
+            ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
             ->where([
                 ['store.id', $store_id],
                 ['base_products.jan_cd', $jan_cd]
@@ -67,7 +67,7 @@ class ProductPriceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductPriceRequest $request, int $store_id, string $jan_cd)
+    public function update(int $store_id, string $jan_cd, ProductPriceRequest $request)
     {
         // 商品が存在するかチェック
         $base_products = BaseProduct::with(['storeBases' => function ($q) use ($store_id) {

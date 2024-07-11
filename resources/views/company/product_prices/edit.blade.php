@@ -18,27 +18,25 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="mb-4">
                                     <h6>店舗名</h6>
                                     <p>{{ $product_price->store_name }}</p>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="mb-4">
                                     <h6>JANコード</h6>
                                     <p>{{ $product_price->jan_cd }}</p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="mb-4">
                                     <h6>商品名</h6>
                                     <p>{{ $product_price->product_name }}</p>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="mb-4">
                                     <h6>定価価格（税抜）</h6>
                                     <p>{{ number_format($product_price->list_price) . '円' }}</p>
