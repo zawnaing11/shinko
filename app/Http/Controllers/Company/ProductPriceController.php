@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\ProductPriceRequest;
-use App\Http\Requests\CSVUploadRequest;
+use App\Http\Requests\CsvUploadRequest;
 use App\Jobs\ProductPriceImportJob;
 use App\Models\BaseProduct;
 use App\Models\Import;
@@ -132,6 +132,7 @@ class ProductPriceController extends Controller
             ]);
 
             $product_price_repository->all()
+                ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
                 ->orderBy('store_id', 'ASC')
                 ->orderBy('base_products.jan_cd', 'ASC')
                 ->chunk(1000, function ($base_products) use ($handle) {
@@ -141,7 +142,7 @@ class ProductPriceController extends Controller
                             'store_id' => $base_product->store_id,
                             'store_name' => $base_product->store_name,
                             'jan_cd' => $base_product->jan_cd,
-                            'product_name' => $base_product->product_name,
+                            'product_name' => str_replace("\x1F", '', $base_product->product_name), // remove unit separator in product_name
                             'list_price' => $base_product->list_price,
                             'price' => $base_product->price,
                         ];
@@ -154,13 +155,12 @@ class ProductPriceController extends Controller
         return response()->streamDownload($callback, $file_name, $headers);
     }
 
-    public function upload(CSVUploadRequest $request)
+    public function upload(CsvUploadRequest $request)
     {
         $import_file = $request->validated()['import_file'];
 
         try {
             DB::transaction(function () use ($import_file) {
-                // 新規
                 $import = Import::create([
                     'model_name' => 'ProductPrice',
                     'file_name' => $import_file->getClientOriginalName(),

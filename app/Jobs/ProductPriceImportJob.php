@@ -8,7 +8,6 @@ use App\Http\Requests\Company\ProductPriceRequest;
 use App\Models\BaseProduct;
 use App\Models\ImportDetail;
 use App\Models\ProductPrice;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,6 +27,7 @@ class ProductPriceImportJob implements ShouldQueue
     private $row_num;
     private $file_path;
     private $import;
+    private $cols;
 
     public function __construct($import, $file_path)
     {
@@ -41,10 +41,9 @@ class ProductPriceImportJob implements ShouldQueue
 
         logger()->info('Import Start', $this->import->toArray());
 
-        // 処理中
         $this->storeImport(2);
 
-        $cols = array_flip([
+        $this->cols = array_flip([
             0 => 'flag',
             1 => 'store_id',
             3 => 'jan_cd',
@@ -67,16 +66,18 @@ class ProductPriceImportJob implements ShouldQueue
 
             foreach ($file as $row) {
                 $this->row_num = $file->key() + 1;
-                logger()->info('row info', [$this->row_num]);
+                logger()->info('row info', ['row_num' => $this->row_num]);
 
                 // ヘッダー行スキップ
                 if ($file->key() < $this->header_num) {
                     continue;
                 }
+
                 try {
-                    DB::transaction(function () use ($row, $cols) {
-                        $store_id = $row[$cols['store_id']];
-                        $jan_cd = $row[$cols['jan_cd']];
+                    DB::transaction(function () use ($row) {
+
+                        $store_id = $row[$this->cols['store_id']];
+                        $jan_cd = $row[$this->cols['jan_cd']];
 
                         // 商品が存在するかチェック
                         $base_products = BaseProduct::where('jan_cd', $jan_cd)
@@ -89,7 +90,7 @@ class ProductPriceImportJob implements ShouldQueue
                             throw new ImportException('商品が存在していません。');
                         }
 
-                        if ($row[$cols['flag']] == 1) {
+                        if ($row[$this->cols['flag']] == 1) {
                             // 商品価格が存在するかチェック
                             $product_price = ProductPrice::where([
                                     ['store_id', '=', $store_id],
@@ -99,9 +100,11 @@ class ProductPriceImportJob implements ShouldQueue
                             if ($product_price === null) {
                                 throw new ImportException('商品価格が存在していません。');
                             }
+
                             $product_price->delete();
+
                         } else {
-                            $validated = $this->validation(['price' => $row[$cols['price']]]);
+                            $validated = $this->validation(['price' => $row[$this->cols['price']]]);
                             ProductPrice::updateOrCreate(
                                 [
                                     'store_id' => $store_id,
@@ -114,29 +117,34 @@ class ProductPriceImportJob implements ShouldQueue
                         }
 
                         $this->storeImportDetail(1);
+
                     });
                 } catch (ImportException $ie) {
                     logger()->info('$ie', [$ie->getCode(), $ie->getMessage()]);
                     $this->storeImportDetail(10, [$ie->getMessage()]);
+
                 } catch (ArrayException $ae) {
                     logger()->info('$ae', [$ae->getCode(), $ae->getMessages()]);
                     $this->storeImportDetail(10, $ae->getMessages());
+
                 } catch (Exception $e) {
                     logger()->error('$e', [$e->getCode(), $e->getMessage()]);
+                    Storage::delete($this->file_path);
                     $this->storeImportDetail(10, [$e->getMessage()]);
+                    $this->storeImport(10);
                 }
             }
-            // 完了
-            $this->storeImport(3);
 
+            $this->storeImport(3);
             Storage::delete($this->file_path);
+
         } catch (ImportException $ie) {
             logger()->info('$ie', [$ie->getCode(), $ie->getMessage()]);
-            // 失敗
             $this->storeImport(10, [$ie->getMessage()]);
+
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            // 失敗
+            Storage::delete($this->file_path);
             $this->storeImport(10);
         }
 
@@ -159,7 +167,6 @@ class ProductPriceImportJob implements ShouldQueue
             'line_number' => $this->row_num,
             'result' => $result,
             'messages' => $messages,
-            'created_at' => Carbon::now(),
         ]);
     }
 

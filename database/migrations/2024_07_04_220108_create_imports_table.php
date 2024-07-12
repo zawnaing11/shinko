@@ -17,9 +17,7 @@ return new class extends Migration
             $table->string('file_name', length: 191)->comment('ファイル名');
             $table->unsignedTinyInteger('status')->default(1)->comment('ステータス');
             $table->json('messages')->comment('メッセージ');
-            $table->dateTime('deleted_at')->nullable();
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at');
+            $table->dateTimes();
         });
     }
 

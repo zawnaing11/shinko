@@ -6,7 +6,7 @@
 @endsection
 @section('widgetbar')
     <a href="{{ route('company.product_prices.export') }}" class="btn btn-outline-primary"><i class="ri-chat-download-line align-middle mr-2"></i>CSVエクスポート</a>
-    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#import_csv"><i class="ri-chat-upload-line align-middle mr-2"></i>CSVインポート</button>
+    <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal" data-target="#import_csv"><i class="ri-chat-upload-line align-middle mr-2"></i>CSVインポート</a>
 @endsection
 @section('content')
 

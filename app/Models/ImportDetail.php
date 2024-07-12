@@ -9,11 +9,12 @@ class ImportDetail extends Model
 {
     use HasUuid;
 
+    const UPDATED_AT = null;
+
     // PRIMARY KEY uuid 設定
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
-    public $timestamps = false;
 
     protected $casts = [
         'messages' => 'array'
@@ -29,7 +30,6 @@ class ImportDetail extends Model
         'result',
         'messages',
         'status',
-        'created_at',
     ];
 
     public function import()

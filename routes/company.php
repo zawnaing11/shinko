@@ -44,6 +44,6 @@ Route::middleware(['auth:company', 'is_active:company'])
         // ユーザー管理
         Route::resource('users', UserController::class)->except('show');
         // インポート
-        Route::resource('imports', ImportController::class)->only('index');
-        Route::resource('imports.details', ImportDetailController::class)->only('index');
+        Route::resource('imports', ImportController::class)->only(['index']);
+        Route::resource('imports.details', ImportDetailController::class)->only(['index']);
     });

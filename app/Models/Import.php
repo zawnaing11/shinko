@@ -28,7 +28,6 @@ class Import extends Model
         'file_name',
         'status',
         'messages',
-        'deleted_at',
     ];
 
     public function details()

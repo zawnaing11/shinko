@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class CSVUploadRequest extends BaseFormRequest
+class CsvUploadRequest extends BaseFormRequest
 {
 
     /**
