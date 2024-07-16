@@ -130,6 +130,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'csv_import' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/csv_import.log'),
+            'tap' => [App\Logging\CustomizeFormatter::class],
+            'level' => env('LOG_LEVEL', 'debug'),
+            'permission' => 0666,
+            'days' => 90
+        ],
+
     ],
 
 ];

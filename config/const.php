@@ -1,6 +1,7 @@
 <?php
 
 $upload_image_extensions = ['jpeg', 'jpg', 'png', 'tiff', 'heic'];
+$upload_csv_extensions = ['csv'];
 
 return [
     // common
@@ -15,6 +16,11 @@ return [
     'accept_image_extensions' => array_map(function ($value) {
         return '.' . $value;
     }, $upload_image_extensions),
+
+    'upload_csv_extensions' => $upload_csv_extensions,
+    'accept_csv_extensions' => array_map(function ($value) {
+        return '.' . $value;
+    }, $upload_csv_extensions),
 
     'is_active' => [
         1 => '有効',
@@ -32,4 +38,22 @@ return [
         'image_path' => 'public/images/notifications/',
     ],
 
+    // csv import
+    'imports' => [
+        'statuses' => [
+            1 => '新規',
+            2 => '処理中',
+            3 => '完了',
+            10 => '失敗',
+        ],
+        'file_path' => 'csv/product_prices/',
+    ],
+
+    'import_details' => [
+        'results' => [
+            1 => '成功',
+            10 => '失敗',
+        ],
+        'default_paginate_number' => 200,
+    ]
 ];

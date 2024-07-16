@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Company\AuthController;
+use App\Http\Controllers\Company\ImportController;
+use App\Http\Controllers\Company\ImportDetailController;
 use App\Http\Controllers\Company\ProductPriceController;
 use App\Http\Controllers\Company\UserController;
 
@@ -36,7 +38,12 @@ Route::middleware(['auth:company', 'is_active:company'])
             Route::get('{store_id}/{jan_cd}/edit', 'edit')->name('edit');
             Route::put('{store_id}/{jan_cd}', 'update')->name('update');
             Route::delete('{product_price?}', 'destroy')->name('destroy');
+            Route::get('export', 'export')->name('export');
+            Route::post('upload', 'upload')->name('upload');
         });
         // ユーザー管理
         Route::resource('users', UserController::class)->except('show');
+        // インポート
+        Route::resource('imports', ImportController::class)->only(['index']);
+        Route::resource('imports.details', ImportDetailController::class)->only(['index']);
     });
