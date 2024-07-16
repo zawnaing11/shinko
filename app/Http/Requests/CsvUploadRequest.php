@@ -27,7 +27,7 @@ class CsvUploadRequest extends BaseFormRequest
     public function attributes()
     {
         return [
-            'import_file' => 'インポートファイル',
+            'import_file' => 'CSV',
         ];
     }
 

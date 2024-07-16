@@ -129,14 +129,11 @@ class ProductPriceImportJob implements ShouldQueue
 
                 } catch (Exception $e) {
                     logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-                    Storage::delete($this->file_path);
                     $this->storeImportDetail(10, [$e->getMessage()]);
-                    $this->storeImport(10);
                 }
             }
 
             $this->storeImport(3);
-            Storage::delete($this->file_path);
 
         } catch (ImportException $ie) {
             logger()->info('$ie', [$ie->getCode(), $ie->getMessage()]);
@@ -144,9 +141,10 @@ class ProductPriceImportJob implements ShouldQueue
 
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
-            Storage::delete($this->file_path);
             $this->storeImport(10);
         }
+
+        Storage::delete($this->file_path);
 
         logger()->info('Import End', $this->import->toArray());
     }

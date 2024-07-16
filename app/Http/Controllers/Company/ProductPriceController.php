@@ -11,6 +11,7 @@ use App\Models\Import;
 use App\Models\ProductPrice;
 use App\Models\Store;
 use App\Repositories\Company\ProductPriceRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -112,7 +113,7 @@ class ProductPriceController extends Controller
             'Content-Type' => 'application/octet-stream',
         ];
 
-        $file_name = '商品価格_' . date('Ymd_His') . '.csv';
+        $file_name = '商品価格_' . Carbon::now()->format('YmdHis') . '.csv';
 
         $callback = function () use ($product_price_repository) {
 
