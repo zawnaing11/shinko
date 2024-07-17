@@ -5,7 +5,7 @@
 <div class="contentbar">
     <div class="row">
         <div class="col-lg-12">
-            <form method="GET" class="form-search" action="{{ route('company.imports.details.index', request()->import->id) }}" autocomplete="off">
+            <form method="GET" class="form-search" action="{{ route('company.imports.show', request()->import->id) }}" autocomplete="off">
                 <div class="card m-b-30" id="search_box">
                     <div class="card-header collapsed" data-toggle="collapse" data-target="#searchCollapse" aria-expanded="false" style="cursor: pointer;">
                         <h5 class="card-title">検索</h5>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="card-body">
 
-                    @forelse ($import_details as $import_detail)
+                    @forelse ($import_details as $detail)
                         @if ($loop->first)
                         <div class="table-responsive m-b-30">
                             <table id="posts-table" class="table">
@@ -65,10 +65,10 @@
                                 <tbody>
                         @endif
                                     <tr>
-                                        <td>{{ number_format($import_detail->line_number) }}</td>
-                                        <td>{{ config('const.import_details.results.' . $import_detail->result) }}</td>
+                                        <td>{{ number_format($detail->line_number) }}</td>
+                                        <td>{{ config('const.import_details.results.' . $detail->result) }}</td>
                                         <td>
-                                            @foreach ($import_detail->messages as $message)
+                                            @foreach ($detail->messages as $message)
                                                 <p>{{ $message }}</p>
                                             @endforeach
                                         </td>

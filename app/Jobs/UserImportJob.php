@@ -4,11 +4,10 @@ namespace App\Jobs;
 
 use App\Exceptions\ArrayException;
 use App\Exceptions\ImportException;
-use App\Http\Requests\Company\ProductPriceRequest;
-use App\Models\BaseProduct;
-use App\Models\CompanyAdminUserStore;
+use App\Http\Requests\Company\UserStoreRequest;
+use App\Http\Requests\Company\UserUpdateRequest;
 use App\Models\ImportDetail;
-use App\Models\ProductPrice;
+use App\Models\User;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class ProductPriceImportJob implements ShouldQueue
+class UserImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -48,11 +47,11 @@ class ProductPriceImportJob implements ShouldQueue
 
         $this->cols = array_flip([
             0 => 'flag',
-            1 => 'store_id',
-            3 => 'jan_cd',
-            6 => 'price',
+            1 => 'email',
+            2 => 'password',
+            3 => 'name',
+            4 => 'retirement_date',
         ]);
-
         try {
             // ファイル存在確認
             if (! Storage::exists($this->file_path)) {
@@ -79,52 +78,39 @@ class ProductPriceImportJob implements ShouldQueue
                 try {
                     DB::transaction(function () use ($row) {
 
-                        $store_id = $row[$this->cols['store_id']];
-                        $jan_cd = $row[$this->cols['jan_cd']];
+                        $email = $row[$this->cols['email']];
 
-                        // 自分の店舗かチェック
-                        $company_store = CompanyAdminUserStore::where([
-                            'company_admin_user_id' => $this->auth_user->id,
-                            'store_id' => $store_id,
-                        ])->first();
-                        if ($company_store === null) {
-                            throw new ImportException('店舗が存在していません。');
-                        }
+                        $user = User::where('email', $email)
+                            ->first();
 
-                        // 商品が存在するかチェック
-                        $base_products = BaseProduct::where('jan_cd', $jan_cd)
-                            ->current()
-                            ->whereHas('storeBases', function ($q) use ($store_id) {
-                                $q->where('store_id', $store_id);
-                            })
-                            ->exists();
-                        if (! $base_products) {
-                            throw new ImportException('商品が存在していません。');
+                        if ($user !== null && $user->company_id !== $this->auth_user->company_id) {
+                            throw new ImportException('企業には同じ値を指定してください。');
                         }
 
                         if ($row[$this->cols['flag']] == 1) {
-                            // 商品価格が存在するかチェック
-                            $product_price = ProductPrice::where([
-                                    ['store_id', '=', $store_id],
-                                    ['jan_cd', '=', $jan_cd],
-                                ])
-                                ->first();
-                            if ($product_price === null) {
-                                throw new ImportException('商品価格が存在していません。');
+                            // ユーザーが存在するかチェック
+                            if ($user === null) {
+                                throw new ImportException('ユーザーが存在していません。');
                             }
 
-                            $product_price->delete();
+                            $user->delete();
 
                         } else {
-                            $validated = $this->validation(['price' => $row[$this->cols['price']]]);
-                            ProductPrice::updateOrCreate(
+                            $data = [
+                                'email' => $email,
+                                'name' => $row[$this->cols['name']],
+                                'retirement_date' => $row[$this->cols['retirement_date']] == '' ? null : $row[$this->cols['retirement_date']],
+                                'password' => $row[$this->cols['password']],
+                            ];
+
+                            $validated = $this->validation($data, $user);
+                            $validated['company_id'] = $this->auth_user->company_id;
+
+                            User::updateOrCreate(
                                 [
-                                    'store_id' => $store_id,
-                                    'jan_cd' => $jan_cd,
+                                    'email' => $validated['email'],
                                 ],
-                                [
-                                    'price' => $validated['price'],
-                                ]
+                                $validated
                             );
                         }
 
@@ -143,6 +129,7 @@ class ProductPriceImportJob implements ShouldQueue
                     logger()->error('$e', [$e->getCode(), $e->getMessage()]);
                     $this->storeImportDetail(10, [$e->getMessage()]);
                 }
+
             }
 
             $this->storeImport(3);
@@ -180,10 +167,10 @@ class ProductPriceImportJob implements ShouldQueue
         ]);
     }
 
-    private function validation(array $data)
+    private function validation(array $data, $user)
     {
-        $product_price_request = new ProductPriceRequest();
-        $validator = Validator::make($data, $product_price_request->rules(), $product_price_request->messages(), $product_price_request->attributes());
+        $user_request = $user !== null ? new UserUpdateRequest() : new UserStoreRequest();
+        $validator = Validator::make($data, $user_request->rules(user_id: $user?->id), $user_request->messages(), $user_request->attributes());
 
         if ($validator->fails()) {
             throw new ArrayException($validator->messages()->all());

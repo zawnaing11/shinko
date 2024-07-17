@@ -42,11 +42,11 @@
 <!-- Start Breadcrumbbar -->
 <div class="breadcrumbbar">
     <div class="row align-items-center">
-        <div class="col-md-8 col-lg-8">
+        <div class="col-md-4 col-lg-4">
             <h4 class="page-title">@yield('title')</h4>
             @yield('breadcrumb')
         </div>
-        <div class="col-md-4 col-lg-4">
+        <div class="col-md-8 col-lg-8">
             <div class="widgetbar">
                 @yield('widgetbar')
             </div>

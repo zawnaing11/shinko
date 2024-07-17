@@ -12,13 +12,17 @@ class UserRequest extends BaseFormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(string $user_id = null): array
     {
+        // Formからは$this->user、Importからは$user_id
+        if (! empty($this->user)) {
+            $user_id = $this->user;
+        }
         return [
             'email' => [
                 'required',
                 'email:rfc,dns',
-                Rule::unique('users', 'email')->ignore($this->user),
+                Rule::unique('users', 'email')->ignore($user_id),
             ],
             'name' => [
                 'required',

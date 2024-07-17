@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\UserStoreRequest;
 use App\Http\Requests\Company\UserUpdateRequest;
+use App\Http\Requests\CsvUploadRequest;
+use App\Jobs\UserImportJob;
+use App\Models\Import;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -17,7 +22,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::orderBy('updated_at', 'DESC');
+        $users = User::orderBy('updated_at', 'DESC')
+            ->where('company_id', auth()->user()->company_id);
 
         if ($request->filled('email')) {
             $users->where('email', 'like', '%' . $request->email . '%');
@@ -55,7 +61,7 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         $validated = $request->validated();
-        $validated['company_id'] = Auth::guard('company')->user()->company_id;
+        $validated['company_id'] = auth()->user()->company_id;
 
         User::create($validated);
 
@@ -93,5 +99,75 @@ class UserController extends Controller
     {
         $user->delete();
         return back()->with('alert.success', 'ユーザーを削除しました。');
+    }
+
+    public function export()
+    {
+        $headers = [
+            'Content-Type' => 'application/octet-stream',
+        ];
+
+        $file_name = 'ユーザー' . Carbon::now()->format('YmdHis') . '.csv';
+
+        $callback = function () {
+
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, [
+                '削除（1=削除）',
+                'Eメールアドレス',
+                'パスワード',
+                '氏名',
+                '退職日'
+            ]);
+
+            User::orderBy('updated_at', 'DESC')
+                ->where('company_id', auth()->user()->company_id)
+                ->chunk(1000, function ($users) use ($handle) {
+                    foreach ($users as $user) {
+                        $values = [
+                            'flag' => '',
+                            'email' => $user->email,
+                            'password' => '',
+                            'name' => $user->name,
+                            'retirement_date' => $user->retirement_date?->format('Y-m-d'),
+                        ];
+                        fputcsv($handle, $values);
+                    }
+                });
+            fclose($handle);
+        };
+
+        return response()->streamDownload($callback, $file_name, $headers);
+    }
+
+    public function upload(CsvUploadRequest $request)
+    {
+        $import_file = $request->validated()['import_file'];
+
+        try {
+            DB::transaction(function () use ($import_file) {
+                $import = Import::create([
+                    'model_name' => 'User',
+                    'file_name' => $import_file->getClientOriginalName(),
+                    'status' => 1,
+                ]);
+
+                $new_file_name = uniqid() . '.' . $import_file->getClientOriginalExtension();
+                $file_path = Storage::putFileAs(config('const.imports.csv_file_path') . 'users', $import_file, $new_file_name);
+
+                dispatch(new UserImportJob($import, $file_path))
+                    ->onQueue('import');
+            });
+        } catch (Exception $e) {
+            logger()->error('$e', [$e->getCode(), $e->getMessage()]);
+            return back()
+                ->with('alert.error', 'CSVアップロードに失敗しました。')
+                ->withInput();
+        }
+
+        return redirect()
+            ->back()
+            ->with('alert.success', 'CSVアップロード受け付けました。');
     }
 }

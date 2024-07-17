@@ -9,9 +9,9 @@ class UserUpdateRequest extends UserRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(string $user_id = null): array
     {
-        $rules = parent::rules();
+        $rules = parent::rules($user_id);
 
         $rules['password'][] = 'nullable';
 

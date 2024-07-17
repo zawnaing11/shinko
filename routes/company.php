@@ -43,7 +43,9 @@ Route::middleware(['auth:company', 'is_active:company'])
         });
         // ユーザー管理
         Route::resource('users', UserController::class)->except('show');
+        Route::get('users/export', [UserController::class, 'export'])->name('users.export');
+        Route::post('users/upload', [UserController::class, 'upload'])->name('users.upload');
+
         // インポート
-        Route::resource('imports', ImportController::class)->only(['index']);
-        Route::resource('imports.details', ImportDetailController::class)->only(['index']);
+        Route::resource('imports', ImportController::class)->only(['index', 'show']);
     });
