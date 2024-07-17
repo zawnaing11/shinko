@@ -22,11 +22,6 @@ return [
         return '.' . $value;
     }, $upload_csv_extensions),
 
-    'is_active' => [
-        1 => '有効',
-        0 => '無効'
-    ],
-
     // product_price
     'product_prices' => [
         'default_paginate_number' => 100,

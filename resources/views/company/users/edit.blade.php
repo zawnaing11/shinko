@@ -1,5 +1,9 @@
 @extends('company.layouts.main')
 @section('title', 'ユーザー管理')
+@section('styles')
+<!-- Datepicker css -->
+<link href="{{ asset('assets/admin/plugins/datepicker/datepicker.min.css') }}" rel="stylesheet" type="text/css">
+@endsection
 @section('content')
 
 <div class="contentbar">
@@ -45,16 +49,14 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label class="form-label">有効/無効<span class="required">*</span></label>
-                                    <div>
-                                        @foreach (config('const.is_active') as $key => $value)
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if (old('is_active', $user->is_active) == $key) checked @endif>
-                                            <label class="form-check-label" for="is_active_{{ $key }}">{{ $value }}</label>
+                                    <label for="retirement_date">退職日</label>
+                                    <div class="input-group">
+                                        <input type="text" id="retirement_date" name="retirement_date" class="date-format form-control @error('retirement_date') is-invalid @enderror" value="{{ old('retirement_date', $user->retirement_date?->format('Y-m-d')) }}" placeholder="YYYY-MM-DD">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>
-                                        @endforeach
-                                        @error('is_active')
-                                        <div id="is_active-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
+                                        @error('retirement_date')
+                                            <div id="retirement_date-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -71,4 +73,10 @@
     </form>
 </div>
 
+@endsection
+@section('js')
+<!-- Datepicker JS -->
+<script src="{{ asset('assets/admin/plugins/datepicker/datepicker.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/datepicker/i18n/datepicker.ja.js') }}"></script>
+<script src="{{ asset('assets/admin/js/datepicker-format.js') }}"></script>
 @endsection

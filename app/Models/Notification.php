@@ -21,12 +21,13 @@ class Notification extends Model
         'title',
         'body',
         'image',
-        'is_active',
-        'publish_date',
+        'publish_begin_datetime',
+        'publish_end_datetime',
     ];
 
     protected $casts = [
-        'publish_date' => 'datetime',
+        'publish_begin_datetime' => 'datetime',
+        'publish_end_datetime' => 'datetime',
     ];
 
     public function getImageUrlAttribute()
@@ -36,10 +37,14 @@ class Notification extends Model
         }
     }
 
-    public function scopeActive(Builder $q): void
+    public function scopePublishable(Builder $query): void
     {
-        $q->where('is_active', 1)
-            ->where('publish_date', '<=', Carbon::now());
+        $now = Carbon::now()->format('Y-m-d H:i');
+        $query->where('publish_begin_datetime', '<=', $now)
+            ->where(function ($q) use ($now) {
+                $q->whereNull('publish_end_datetime')
+                    ->orWhere('publish_end_datetime', '>=', $now);
+            });
     }
 
 }

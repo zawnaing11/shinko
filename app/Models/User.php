@@ -21,11 +21,15 @@ class User extends Authenticatable
         'email',
         'password',
         'name',
-        'is_active',
+        'retirement_date',
     ];
 
     protected $hidden = [
         'password',
+    ];
+
+    protected $casts = [
+        'retirement_date' => 'date',
     ];
 
     public function setPasswordAttribute($value)

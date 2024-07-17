@@ -25,10 +25,10 @@ class BaseProduct extends Model
 
     public function scopeCurrent($q)
     {
-        $now = Carbon::now();
+        $today = Carbon::today();
         return $q->where([
-            ['price_start_date', '<=', $now],
-            ['price_end_date', '>=', $now],
+            ['price_start_date', '<=', $today],
+            ['price_end_date', '>=', $today],
         ]);
     }
 }

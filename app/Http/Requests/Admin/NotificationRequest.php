@@ -32,13 +32,14 @@ class NotificationRequest extends BaseFormRequest
             'is_image' => [
                 'nullable',
             ],
-            'is_active' => [
+            'publish_begin_datetime' => [
                 'required',
-                'in:' . implode(',', array_keys(config('const.is_active'))),
+                'date_format:Y-m-d H:i'
             ],
-            'publish_date' => [
-                'required',
+            'publish_end_datetime' => [
+                'nullable',
                 'date_format:Y-m-d H:i',
+                'after_or_equal:publish_begin_datetime'
             ],
         ];
     }
@@ -65,8 +66,8 @@ class NotificationRequest extends BaseFormRequest
             'body' => '本文',
             'image' => '画像',
             'is_image' => '画像',
-            'is_active' => '有効/無効',
-            'publish_date' => '公開日時',
+            'publish_begin_datetime' => '公開開始日時',
+            'publish_end_datetime' => '公開終了日時',
         ];
     }
 }

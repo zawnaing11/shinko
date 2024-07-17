@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\UserStoreRequest;
 use App\Http\Requests\Company\UserUpdateRequest;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,10 +25,17 @@ class UserController extends Controller
         if ($request->filled('name')) {
             $users->where('name', 'like', '%' . $request->name . '%');
         }
-        if ($request->filled('is_active')) {
-            $users->where('is_active', $request->is_active);
+        if (! empty($request->retirement_date)) {
+            $today = Carbon::today();
+            if ($request->retirement_date == 1) {
+                $users->where(function ($q) use ($today) {
+                    $q->whereNull('retirement_date')
+                        ->orWhere('retirement_date', '>', $today);
+                });
+            } else {
+                $users->where('retirement_date', '<=', $today);
+            }
         }
-
         $users = $users->paginate(config('const.default_paginate_number'));
 
         return view('company.users.index', ['users' => $users]);

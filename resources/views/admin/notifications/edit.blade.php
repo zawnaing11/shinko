@@ -27,16 +27,32 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="publish_date">公開日時<span class="required">*</span></label>
+                                    <label for="publish_begin_datetime">公開開始日時<span class="required">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" id="publish_date" name="publish_date" class="datetime-format form-control @error('publish_date') is-invalid @enderror" value="{{ old('publish_date', $notification->publish_date ? date('Y-m-d H:i', strtotime($notification->publish_date)) : "") }}" placeholder="YYYY-MM-DD HH:mm" required>
+                                        <input type="text" id="publish_begin_datetime" name="publish_begin_datetime" class="datetime-format form-control @error('publish_begin_datetime') is-invalid @enderror" value="{{ old('publish_begin_datetime', $notification->publish_begin_datetime?->format('Y-m-d H:i')) }}" placeholder="YYYY-MM-DD HH:mm" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                         </div>
-                                        @error('publish_date')
-                                            <div id="publish_date-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
+                                        @error('publish_begin_datetime')
+                                            <div id="publish_begin_datetime-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="publish_end_datetime">公開終了日時</label>
+                                    <div class="input-group">
+                                        <input type="text" id="publish_end_datetime" name="publish_end_datetime" class="datetime-format form-control @error('publish_end_datetime') is-invalid @enderror" value="{{ old('publish_end_datetime', $notification->publish_end_datetime?->format('Y-m-d H:i')) }}" placeholder="YYYY-MM-DD HH:mm">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="ri-calendar-line"></i></span>
+                                        </div>
+                                        @error('publish_end_datetime')
+                                            <div id="publish_end_datetime-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -46,7 +62,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="" class="form-label">本文</label>
-                                    <textarea id="body" name="body" class="form-control @error('body') is-invalid @enderror" placeholder="本文" cols="30" rows="5" maxlength="{{ config('const.default_textarea_maxlength') }}">{{ old('body', $notification->body) }}</textarea>
+                                    <textarea id="body" name="body" class="form-control @error('body') is-invalid @enderror" placeholder="本文" cols="30" rows="10" maxlength="{{ config('const.default_textarea_maxlength') }}">{{ old('body', $notification->body) }}</textarea>
                                     @error('body')
                                     <div id="body-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror
@@ -60,12 +76,10 @@
                                     <label for="">画像</label>
                                     <input type="hidden" id="is_image" name="is_image" value="{{ old('is_image', $notification->image) }}">
                                     <input type="file" id="image" name="image" class="image_upload" data-role="none" hidden accept="{{ implode(',', config('const.accept_image_extensions')) }}">
-                                    <div class="col-6 pl-0">
-                                        <img class="preview_image @if (empty(old('is_image', $notification->image))) d-none @endif w-100" src="{{ (old('is_image') && (old('is_image') != $notification->image)) ? \Storage::url(config('const.notifications.tmp_path') . old('is_image', $notification->image))
-                                        : (($notification->image && old('is_image', $notification->image) && ($notification->image == old('is_image', $notification->image))) ? $notification->image_url : '#') }}">
-                                        <div class="buttons text-center mt-3 @if (empty(old('is_image', $notification->image))) d-none @endif">
-                                            <button type="button" class="btn btn-danger image_delete_btn">画像削除</button>
-                                        </div>
+                                    <img class="preview_image @if (empty(old('is_image', $notification->image))) d-none @endif w-100" src="{{ (old('is_image') && (old('is_image') != $notification->image)) ? \Storage::url(config('const.notifications.tmp_path') . old('is_image', $notification->image))
+                                    : (($notification->image && old('is_image', $notification->image) && ($notification->image == old('is_image', $notification->image))) ? $notification->image_url : '#') }}">
+                                    <div class="buttons text-center mt-3 @if (empty(old('is_image', $notification->image))) d-none @endif">
+                                        <button type="button" class="btn btn-danger image_delete_btn">画像削除</button>
                                     </div>
                                     <button type="button" class="btn btn-primary-rgba btn-lg btn-block mt-3 image_upload_btn @if (! empty(old('is_image', $notification->image))) d-none @endif">画像アップロード</button>
                                     @error('image')
@@ -74,24 +88,6 @@
                                     @error('is_image')
                                     <div id="is_image-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
                                     @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label class="form-label">有効/無効<span class="required">*</span></label>
-                                    <div>
-                                        @foreach (config('const.is_active') as $key => $value)
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="is_active_{{ $key }}" name="is_active" class="form-check-input" value="{{ $key }}" @if (old('is_active', $notification->is_active) == $key) checked @endif>
-                                            <label class="form-check-label" for="is_active_{{ $key }}">{{ $value }}</label>
-                                        </div>
-                                        @endforeach
-                                        @error('is_active')
-                                        <div id="is_active-error" class="invalid-feedback animated fadeInDown d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
                                 </div>
                             </div>
                         </div>

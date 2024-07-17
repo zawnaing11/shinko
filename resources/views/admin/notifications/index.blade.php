@@ -27,31 +27,10 @@
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                        <div class="form-group">
-                                            <div>
-                                                <label for="is_active">有効/無効</label>
-                                            </div>
-                                            <div class="form-check-inline">
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" id="is_active_1" name="is_active" class="form-check-input default" value="" {{ request()->is_active == '' ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="is_active_1">全て</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" id="is_active_2" name="is_active" class="form-check-input" value="1" {{ request()->is_active ? 'checked' : '' }}>
-                                                    <label for="is_active_2" class="form-check-label">有効</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" id="is_active_3" name="is_active" class="form-check-input" value="0" {{ request()->is_active == '' ? '' : (request()->is_active == 0 ? 'checked' : '') }}>
-                                                    <label for="is_active_3" class="form-check-label">無効</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <div class="col-3">
                                     <div class="form-group">
-                                        <label for="publish_from">公開日時</label>
+                                        <label for="publish_begin_datetime">公開開始日時</label>
                                         <div class="input-group">
-                                            <input type="text" id="publish_from" name="publish_from" class="datetime-format form-control" value="{{ request()->publish_from }}" placeholder="YYYY-MM-DD HH:mm">
+                                            <input type="text" id="publish_begin_datetime" name="publish_begin_datetime" class="datetime-format form-control" value="{{ request()->publish_begin_datetime }}" placeholder="YYYY-MM-DD HH:mm">
                                             <div class="input-group-append">
                                                 <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                             </div>
@@ -59,10 +38,10 @@
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                    <span class="range_icon">～</span>
                                     <div class="form-group">
-                                        <div class="input-group mt-2">
-                                            <input type="text" id="publish_to" class="datetime-format form-control" name="publish_to" value="{{ request()->publish_to }}" placeholder="YYYY-MM-DD HH:mm">
+                                        <label for="publish_end_datetime">公開終了日時</label>
+                                        <div class="input-group">
+                                            <input type="text" id="publish_end_datetime" class="datetime-format form-control" name="publish_end_datetime" value="{{ request()->publish_end_datetime }}" placeholder="YYYY-MM-DD HH:mm">
                                             <div class="input-group-append">
                                                 <span class="input-group-text"><i class="ri-calendar-line"></i></span>
                                             </div>
@@ -94,8 +73,8 @@
                                 <thead class="text-nowrap">
                                     <tr>
                                         <th scope="col">タイトル</th>
-                                        <th scope="col">有効/無効</th>
-                                        <th scope="col">公開日時</th>
+                                        <th scope="col">公開開始日時</th>
+                                        <th scope="col">公開終了日時</th>
                                         <th scope="col">操作</th>
                                     </tr>
                                 </thead>
@@ -103,8 +82,8 @@
                         @endif
                                     <tr>
                                         <td>{{ Str::limit($notification->title, 60) }}</td>
-                                        <td>{{ config('const.is_active.' . $notification->is_active) }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($notification->publish_date)->format('Y-m-d H:i:s') }}</td>
+                                        <td>{{ $notification->publish_begin_datetime->format('Y-m-d H:i') }}</td>
+                                        <td>{{ $notification->publish_end_datetime?->format('Y-m-d H:i') }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('admin.notifications.destroy', $notification->id) }}">
                                                 @csrf
