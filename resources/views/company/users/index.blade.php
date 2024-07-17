@@ -39,16 +39,16 @@
                                         </div>
                                         <div class="form-check-inline">
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="retirement_date_1" name="retirement_date" class="form-check-input default" value="" {{ request()->retirement_date == '' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="retirement_date_1">すべて</label>
+                                                <input type="radio" id="retirement_date_0" name="retirement_date" class="form-check-input default" value="0" {{ request()->retirement_date == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="retirement_date_0">すべて</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="retirement_date_2" name="retirement_date" class="form-check-input" value="0" {{ request()->retirement_date == '' ? '' : (request()->retirement_date == 0 ? 'checked' : '') }}>
-                                                <label for="retirement_date_2" class="form-check-label">未退職者</label>
+                                                <input type="radio" id="retirement_date_1" name="retirement_date" class="form-check-input" value="1" {{ request()->retirement_date == 1 ? 'checked' : '' }}>
+                                                <label for="retirement_date_1" class="form-check-label">未退職者</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="retirement_date_3" name="retirement_date" class="form-check-input" value="1" {{ request()->retirement_date ? 'checked' : '' }}>
-                                                <label for="retirement_date_3" class="form-check-label">退職者</label>
+                                                <input type="radio" id="retirement_date_2" name="retirement_date" class="form-check-input" value="2" {{ request()->retirement_date == 2 ? 'checked' : '' }}>
+                                                <label for="retirement_date_2" class="form-check-label">退職者</label>
                                             </div>
                                         </div>
                                     </div>

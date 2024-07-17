@@ -25,9 +25,9 @@ class UserController extends Controller
         if ($request->filled('name')) {
             $users->where('name', 'like', '%' . $request->name . '%');
         }
-        if ($request->filled('retirement_date')) {
+        if (! empty($request->retirement_date)) {
             $today = Carbon::today();
-            if ($request->retirement_date == 0) {
+            if ($request->retirement_date == 1) {
                 $users->where(function ($q) use ($today) {
                     $q->whereNull('retirement_date')
                         ->orWhere('retirement_date', '>', $today);
