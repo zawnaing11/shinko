@@ -39,7 +39,7 @@ class Notification extends Model
 
     public function scopePublishable(Builder $query): void
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->format('Y-m-d H:i');
         $query->where('publish_begin_datetime', '<=', $now)
             ->where(function ($q) use ($now) {
                 $q->whereNull('publish_end_datetime')
