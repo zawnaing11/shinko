@@ -14,7 +14,7 @@ class ProductPriceRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'price' => [
+            'price_tax' => [
                 'required',
                 'integer',
                 'min:0',
@@ -26,7 +26,7 @@ class ProductPriceRequest extends BaseFormRequest
     public function attributes()
     {
         return [
-            'price' => '販売価格（税抜）',
+            'price_tax' => '販売価格（税込）',
         ];
     }
 }

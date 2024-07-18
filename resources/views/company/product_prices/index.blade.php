@@ -73,7 +73,7 @@
                                         <th>JANコード</th>
                                         <th>商品名</th>
                                         <th>定価価格（税抜）</th>
-                                        <th>販売価格（税抜）</th>
+                                        <th>販売価格（税込）</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
@@ -84,7 +84,7 @@
                                         <td>{{ $product_price->jan_cd }}</td>
                                         <td class="text-break">{{ Str::limit($product_price->product_name, 20) }}</td>
                                         <td>{{ number_format($product_price->list_price) . '円' }}</td>
-                                        <td>{{ $product_price->price ? number_format($product_price->price) . '円' : '未設定' }}</td>
+                                        <td>{{ $product_price->price_tax ? number_format($product_price->price_tax) . '円' : '未設定' }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('company.product_prices.destroy', $product_price?->product_price_id) }}">
                                                 @csrf

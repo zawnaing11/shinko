@@ -25,7 +25,10 @@ class ProductPriceRepository
                 'base_products.jan_cd',
                 'ms_products.product_name',
                 'base_products.list_price',
-                'product_prices.price'
+                'base_products.list_price_tax',
+                'base_products.wholesale_price',
+                'base_products.wholesale_price_tax',
+                'product_prices.price_tax',
             );
     }
 }

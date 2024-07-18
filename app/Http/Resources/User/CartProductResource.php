@@ -20,8 +20,7 @@ class CartProductResource extends JsonResource
         return [
             'jan_cd' => $this->jan_cd,
             'quantity' => $this->quantity,
-            'price' => $this->price,
-            'price_tax' => $this->calcTax($this->price, $this->tax_rate),
+            'price_tax' => $this->price_tax,
             'list_price' => $this->list_price,
             'list_price_tax' => $this->calcTax($this->list_price, $this->tax_rate),
         ];

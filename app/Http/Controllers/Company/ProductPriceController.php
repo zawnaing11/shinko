@@ -119,13 +119,12 @@ class ProductPriceController extends Controller
             $handle = fopen('php://output', 'w');
 
             fputcsv($handle, [
-                '削除（1=削除）',
                 '店舗ID',
                 '店舗名',
                 'JANコード',
                 '商品名',
-                '定価価格（税抜）',
-                '販売価格（税抜）',
+                '卸値（税抜）',
+                '販売価格（税込）',
             ]);
 
             $product_price_repository->all()
@@ -135,13 +134,12 @@ class ProductPriceController extends Controller
                 ->chunk(1000, function ($base_products) use ($handle) {
                     foreach ($base_products as $base_product) {
                         $values = [
-                            'flag' => '',
                             'store_id' => $base_product->store_id,
                             'store_name' => $base_product->store_name,
                             'jan_cd' => $base_product->jan_cd,
                             'product_name' => str_replace("\x1F", '', $base_product->product_name), // remove unit separator in product_name
-                            'list_price' => $base_product->list_price,
-                            'price' => $base_product->price,
+                            'wholesale_price' => $base_product->wholesale_price,
+                            'price_tax' => $base_product->price_tax ?: $base_product->list_price_tax_calc,
                         ];
                         fputcsv($handle, $values);
                     }

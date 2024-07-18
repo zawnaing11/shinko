@@ -17,29 +17,55 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="mb-4">
+                        <div class="row mb-5">
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
                                     <h6>店舗名</h6>
-                                    <p>{{ $product_price->store_name }}</p>
+                                    <p class="mb-0">{{ $product_price->store_name }}</p>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="mb-4">
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
                                     <h6>JANコード</h6>
-                                    <p>{{ $product_price->jan_cd }}</p>
+                                    <p class="mb-0">{{ $product_price->jan_cd }}</p>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="mb-4">
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
                                     <h6>商品名</h6>
-                                    <p>{{ $product_price->product_name }}</p>
+                                    <p class="mb-0">{{ $product_price->product_name }}</p>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="mb-4">
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
                                     <h6>定価価格（税抜）</h6>
-                                    <p>{{ number_format($product_price->list_price) . '円' }}</p>
+                                    <p class="mb-0">{{ number_format($product_price->list_price) . '円' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
+                                    <h6>定価価格（税抜）</h6>
+                                    <p class="mb-0">{{ number_format($product_price->list_price) . '円' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
+                                    <h6>定価価格（税込）</h6>
+                                    <p class="mb-0">{{ number_format($product_price->list_price_tax_calc) . '円' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
+                                    <h6>卸値（税抜）</h6>
+                                    <p class="mb-0">{{ number_format($product_price->wholesale_price) . '円' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="order-primary-detail mb-4">
+                                    <h6>卸値（税込）</h6>
+                                    <p class="mb-0">{{ number_format($product_price->wholesale_price_tax_calc) . '円' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -57,10 +83,10 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="price" class="form-label">販売価格（税抜）<span class="required">*</span></label>
-                                    <input type="number" id="price" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $product_price?->price) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="販売価格（税抜）">
-                                    @error('price')
-                                        <div id="price-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
+                                    <label for="price_tax" class="form-label">販売価格（税込）<span class="required">*</span></label>
+                                    <input type="number" id="price_tax" name="price_tax" class="form-control @error('price_tax') is-invalid @enderror" value="{{ old('price_tax', $product_price->price_tax ?: $product_price->list_price_tax_calc) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="販売価格（税込）">
+                                    @error('price_tax')
+                                        <div id="price_tax-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>

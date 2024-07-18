@@ -34,7 +34,7 @@ class CartRepository
                 'carts.id as cart_id',
                 'cart_products.jan_cd as jan_cd',
                 'cart_products.quantity as quantity',
-                'product_prices.price as price',
+                'product_prices.price_tax as price_tax',
                 'base_products.list_price as list_price',
                 'ms_products.tax_rate as tax_rate'
             )
