@@ -24,6 +24,8 @@ class OrderProduct extends Model
         'price_tax',
         'list_price',
         'list_price_tax',
+        'wholesale_price',
+        'wholesale_price_tax',
         'tax_rate',
     ];
 

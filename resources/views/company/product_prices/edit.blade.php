@@ -36,12 +36,6 @@
                                     <p class="mb-0">{{ $product_price->product_name }}</p>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-6 col-xl-3">
-                                <div class="order-primary-detail mb-4">
-                                    <h6>定価価格（税抜）</h6>
-                                    <p class="mb-0">{{ number_format($product_price->list_price) . '円' }}</p>
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 col-lg-6 col-xl-3">

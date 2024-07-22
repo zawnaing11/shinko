@@ -36,6 +36,7 @@ class CartRepository
                 'cart_products.quantity as quantity',
                 'product_prices.price_tax as price_tax',
                 'base_products.list_price as list_price',
+                'base_products.wholesale_price as wholesale_price',
                 'ms_products.tax_rate as tax_rate'
             )
             ->orderBy('cart_products.updated_at', 'DESC')

@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('order_products', function (Blueprint $table) {
-            $table->dropColumn('price');
+            $table->after('list_price_tax', function ($table) {
+                $table->decimal('wholesale_price', 8, 2)->default(0.00)->comment('税抜卸値');
+                $table->decimal('wholesale_price_tax', 8, 2)->default(0.00)->comment('税込卸値');
+            });
         });
     }
 
@@ -22,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('order_products', function (Blueprint $table) {
-            $table->integer('price')->nullable()->after('product_name')->comment('税抜販売価格');
+            $table->dropColumn(['wholesale_price', 'wholesale_price_tax']);
         });
     }
 };

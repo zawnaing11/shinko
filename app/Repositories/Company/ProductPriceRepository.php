@@ -9,7 +9,8 @@ class ProductPriceRepository
 {
     public function all()
     {
-        return BaseProduct::join('ms_products', 'ms_products.jan_cd', '=', 'base_products.jan_cd')
+        return BaseProduct::with(['msProduct'])
+            ->join('ms_products', 'ms_products.jan_cd', '=', 'base_products.jan_cd')
             ->join('store_bases', 'store_bases.base_id', '=', 'base_products.base_id')
             ->join('store', 'store.id', '=', 'store_bases.store_id')
             ->join('company_admin_user_stores', 'company_admin_user_stores.store_id', '=', 'store.id')

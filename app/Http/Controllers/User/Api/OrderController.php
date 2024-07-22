@@ -61,6 +61,7 @@ class OrderController extends Controller
                     'base_products.jan_cd as jan_cd',
                     'product_prices.price_tax as price_tax',
                     'base_products.list_price as list_price',
+                    'base_products.wholesale_price as wholesale_price',
                     'ms_products.tax_rate as tax_rate',
                     'ms_products.product_name as product_name'
                 )
@@ -87,9 +88,12 @@ class OrderController extends Controller
                         'jan_cd' => $product->jan_cd,
                         'quantity' => $product->quantity,
                         'product_name' => $base_product->product_name,
+                        'price' => $this->calcPWithoutTax($base_product->price_tax, $base_product->tax_rate),
                         'price_tax' => $base_product->price_tax,
                         'list_price' => $base_product->list_price,
                         'list_price_tax' => $this->calcTax($base_product->list_price, $base_product->tax_rate),
+                        'wholesale_price' => $base_product->wholesale_price,
+                        'wholesale_price_tax' => $this->calcTax($base_product->wholesale_price, $base_product->tax_rate),
                         'tax_rate' => $base_product->tax_rate,
                     ]);
                 }
