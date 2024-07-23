@@ -41,7 +41,7 @@ return [
             3 => '完了',
             10 => '失敗',
         ],
-        'file_path' => 'csv/product_prices/',
+        'csv_file_path' => 'csv/',
     ],
 
     'import_details' => [

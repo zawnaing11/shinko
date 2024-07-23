@@ -35,4 +35,20 @@ class ImportController extends Controller
             'imports' => $imports
         ]);
     }
+
+    public function show(Request $request, Import $import)
+    {
+        $import_details = $import->details()
+            ->orderBy('line_number', 'ASC');
+
+        if ($request->filled('result')) {
+            $import_details->where('result', $request->result);
+        }
+
+        $import_details = $import_details->paginate(config('const.import_details.default_paginate_number'));
+
+        return view('company.imports.show', [
+            'import_details' => $import_details
+        ]);
+    }
 }

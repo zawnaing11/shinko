@@ -13,7 +13,6 @@ use App\Models\Store;
 use App\Repositories\Company\ProductPriceRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,7 @@ class ProductPriceController extends Controller
     public function index(Request $request, ProductPriceRepository $product_price_repository)
     {
         $base_products = $product_price_repository->all()
-            ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id);
+            ->where('company_admin_user_stores.company_admin_user_id', auth()->user()->id);
 
         if ($request->filled('store_name')) {
             $base_products->where('store.id', $request->store_name);
@@ -43,7 +42,7 @@ class ProductPriceController extends Controller
         return view('company.product_prices.index', [
             'product_prices' => $base_products,
             'stores' => Store::whereHas('companyAdminUserStore', function ($q) {
-                    $q->where('company_admin_user_id', Auth::user()->id);
+                    $q->where('company_admin_user_id', auth()->user()->id);
                 })->get(),
         ]);
     }
@@ -119,9 +118,6 @@ class ProductPriceController extends Controller
 
             $handle = fopen('php://output', 'w');
 
-            // 文字コードをShift-JISに変換
-            stream_filter_prepend($handle, 'convert.iconv.utf-8/cp932//TRANSLIT');
-
             fputcsv($handle, [
                 '削除（1=削除）',
                 '店舗ID',
@@ -133,7 +129,7 @@ class ProductPriceController extends Controller
             ]);
 
             $product_price_repository->all()
-                ->where('company_admin_user_stores.company_admin_user_id', Auth::user()->id)
+                ->where('company_admin_user_stores.company_admin_user_id', auth()->user()->id)
                 ->orderBy('store_id', 'ASC')
                 ->orderBy('base_products.jan_cd', 'ASC')
                 ->chunk(1000, function ($base_products) use ($handle) {
@@ -169,7 +165,7 @@ class ProductPriceController extends Controller
                 ]);
 
                 $new_file_name = uniqid() . '.' . $import_file->getClientOriginalExtension();
-                $file_path = Storage::putFileAs(config('const.imports.file_path'), $import_file, $new_file_name);
+                $file_path = Storage::putFileAs(config('const.imports.csv_file_path') . 'product_prices', $import_file, $new_file_name);
 
                 dispatch(new ProductPriceImportJob($import, $file_path))
                     ->onQueue('import');

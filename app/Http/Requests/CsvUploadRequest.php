@@ -19,7 +19,7 @@ class CsvUploadRequest extends BaseFormRequest
             'import_file' => [
                 'required',
                 'file',
-                'mimes:' . implode(',', config('const.upload_csv_extensions')),
+                'extensions:' . implode(',', config('const.upload_csv_extensions')),
             ]
         ];
     }
