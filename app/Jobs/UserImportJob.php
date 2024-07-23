@@ -39,7 +39,7 @@ class UserImportJob implements ShouldQueue
 
     public function handle()
     {
-        Log::setDefaultDriver('user_csv_import');
+        Log::setDefaultDriver('csv_import_users');
 
         logger()->info('Import Start', $this->import->toArray());
 
