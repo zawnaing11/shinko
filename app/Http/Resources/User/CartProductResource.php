@@ -17,15 +17,20 @@ class CartProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if ($this->price_tax) {
+            $price_tax = $this->price_tax;
+
+        } else if ($this->list_price_tax) {
+            $price_tax = $this->list_price_tax;
+
+        } else {
+            $price_tax = $this->calcTax($this->list_price, $this->tax_rate);
+        }
+
         return [
             'jan_cd' => $this->jan_cd,
             'quantity' => $this->quantity,
-            'price' => $this->calcPWithoutTax($this->price_tax, $this->tax_rate),
-            'price_tax' => $this->price_tax,
-            'list_price' => $this->list_price,
-            'list_price_tax' => $this->calcTax($this->list_price, $this->tax_rate),
-            'wholesale_price' => $this->wholesale_price,
-            'wholesale_price_tax' => $this->calcTax($this->wholesale_price, $this->tax_rate),
+            'price_tax' => $price_tax,
         ];
     }
 }
