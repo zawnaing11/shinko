@@ -20,7 +20,7 @@ class OrderProduct extends Model
         'jan_cd',
         'quantity',
         'product_name',
-        'price',
+        'selling_price_tax',
         'price_tax',
         'list_price',
         'list_price_tax',

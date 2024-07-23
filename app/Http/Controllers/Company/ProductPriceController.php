@@ -124,7 +124,7 @@ class ProductPriceController extends Controller
                 'JANコード',
                 '商品名',
                 '卸値（税抜）',
-                '販売価格（税込）',
+                '税込価格',
             ]);
 
             $product_price_repository->all()

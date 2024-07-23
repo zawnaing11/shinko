@@ -26,7 +26,7 @@ class ProductPriceRequest extends BaseFormRequest
     public function attributes()
     {
         return [
-            'price_tax' => '販売価格（税込）',
+            'price_tax' => '税込価格',
         ];
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
         });
 
         Schema::table('product_prices', function (Blueprint $table) {
-            $table->integer('price_tax')->comment('税込販売価格')->change();
+            $table->integer('price_tax')->comment('税込価格')->change();
         });
     }
 

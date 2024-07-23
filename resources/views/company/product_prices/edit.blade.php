@@ -77,8 +77,8 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="price_tax" class="form-label">販売価格（税込）<span class="required">*</span></label>
-                                    <input type="number" id="price_tax" name="price_tax" class="form-control @error('price_tax') is-invalid @enderror" value="{{ old('price_tax', $product_price->price_tax ?: $product_price->list_price_tax_calc) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="販売価格（税込）">
+                                    <label for="price_tax" class="form-label">税込価格<span class="required">*</span></label>
+                                    <input type="number" id="price_tax" name="price_tax" class="form-control @error('price_tax') is-invalid @enderror" value="{{ old('price_tax', $product_price->price_tax ?: $product_price->list_price_tax_calc) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="税込価格">
                                     @error('price_tax')
                                         <div id="price_tax-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror

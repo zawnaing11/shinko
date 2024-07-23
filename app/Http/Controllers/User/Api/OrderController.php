@@ -61,7 +61,9 @@ class OrderController extends Controller
                     'base_products.jan_cd as jan_cd',
                     'product_prices.price_tax as price_tax',
                     'base_products.list_price as list_price',
+                    'base_products.list_price_tax as list_price_tax',
                     'base_products.wholesale_price as wholesale_price',
+                    'base_products.wholesale_price_tax as wholesale_price_tax',
                     'ms_products.tax_rate as tax_rate',
                     'ms_products.product_name as product_name'
                 )
@@ -83,17 +85,28 @@ class OrderController extends Controller
                 // insert()でも可能だが$fillableチェックが入らないためcreate()で実装
                 foreach ($cart->products as $product) {
                     $base_product = $base_products->where('jan_cd', $product->jan_cd)->first();
+
+                    if ($base_product->price_tax) {
+                        $price_tax = $base_product->price_tax;
+
+                    } else if ($base_product->list_price_tax) {
+                        $price_tax = $base_product->list_price_tax;
+
+                    } else {
+                        $price_tax = $this->calcTax($base_product->list_price, $base_product->tax_rate);
+                    }
+
                     OrderProduct::create([
                         'order_id' => $order->id,
                         'jan_cd' => $product->jan_cd,
                         'quantity' => $product->quantity,
                         'product_name' => $base_product->product_name,
-                        'price' => $this->calcPWithoutTax($base_product->price_tax, $base_product->tax_rate),
+                        'selling_price_tax' => $price_tax,
                         'price_tax' => $base_product->price_tax,
                         'list_price' => $base_product->list_price,
-                        'list_price_tax' => $this->calcTax($base_product->list_price, $base_product->tax_rate),
+                        'list_price_tax' => $base_product->list_price_tax,
                         'wholesale_price' => $base_product->wholesale_price,
-                        'wholesale_price_tax' => $this->calcTax($base_product->wholesale_price, $base_product->tax_rate),
+                        'wholesale_price_tax' => $base_product->wholesale_price_tax,
                         'tax_rate' => $base_product->tax_rate,
                     ]);
                 }
