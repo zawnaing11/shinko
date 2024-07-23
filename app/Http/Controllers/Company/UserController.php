@@ -115,6 +115,7 @@ class UserController extends Controller
 
             fputcsv($handle, [
                 '削除（1=削除）',
+                'ID',
                 'Eメールアドレス',
                 'パスワード',
                 '氏名',
@@ -127,6 +128,7 @@ class UserController extends Controller
                     foreach ($users as $user) {
                         $values = [
                             'flag' => '',
+                            'id' => $user->id,
                             'email' => $user->email,
                             'password' => '',
                             'name' => $user->name,

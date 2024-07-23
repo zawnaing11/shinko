@@ -40,7 +40,7 @@ class ProductPriceImportJob implements ShouldQueue
 
     public function handle()
     {
-        Log::setDefaultDriver('csv_import');
+        Log::setDefaultDriver('product_price_csv_import');
 
         logger()->info('Import Start', $this->import->toArray());
 

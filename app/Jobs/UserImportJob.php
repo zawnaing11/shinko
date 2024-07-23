@@ -4,8 +4,8 @@ namespace App\Jobs;
 
 use App\Exceptions\ArrayException;
 use App\Exceptions\ImportException;
-use App\Http\Requests\Company\UserStoreRequest;
-use App\Http\Requests\Company\UserUpdateRequest;
+use App\Http\Requests\Company\UserCsvStoreRequest;
+use App\Http\Requests\Company\UserCsvUpdateRequest;
 use App\Models\ImportDetail;
 use App\Models\User;
 use Exception;
@@ -39,7 +39,7 @@ class UserImportJob implements ShouldQueue
 
     public function handle()
     {
-        Log::setDefaultDriver('csv_import');
+        Log::setDefaultDriver('user_csv_import');
 
         logger()->info('Import Start', $this->import->toArray());
 
@@ -47,10 +47,11 @@ class UserImportJob implements ShouldQueue
 
         $this->cols = array_flip([
             0 => 'flag',
-            1 => 'email',
-            2 => 'password',
-            3 => 'name',
-            4 => 'retirement_date',
+            1 => 'id',
+            2 => 'email',
+            3 => 'password',
+            4 => 'name',
+            5 => 'retirement_date',
         ]);
         try {
             // ファイル存在確認
@@ -78,13 +79,12 @@ class UserImportJob implements ShouldQueue
                 try {
                     DB::transaction(function () use ($row) {
 
-                        $email = $row[$this->cols['email']];
+                        $id = $row[$this->cols['id']];
 
-                        $user = User::where('email', $email)
-                            ->first();
+                        $user = User::find($id);
 
                         if ($user !== null && $user->company_id !== $this->auth_user->company_id) {
-                            throw new ImportException('企業には同じ値を指定してください。');
+                            throw new ImportException('ユーザーが存在していません。');
                         }
 
                         if ($row[$this->cols['flag']] == 1) {
@@ -97,10 +97,10 @@ class UserImportJob implements ShouldQueue
 
                         } else {
                             $data = [
-                                'email' => $email,
+                                'email' => $row[$this->cols['email']],
                                 'name' => $row[$this->cols['name']],
-                                'retirement_date' => $row[$this->cols['retirement_date']] == '' ? null : $row[$this->cols['retirement_date']],
                                 'password' => $row[$this->cols['password']],
+                                'retirement_date' => $row[$this->cols['retirement_date']] == '' ? null : $row[$this->cols['retirement_date']],
                             ];
 
                             $validated = $this->validation($data, $user);
@@ -108,7 +108,7 @@ class UserImportJob implements ShouldQueue
 
                             User::updateOrCreate(
                                 [
-                                    'email' => $validated['email'],
+                                    'id' => $id,
                                 ],
                                 $validated
                             );
@@ -159,7 +159,7 @@ class UserImportJob implements ShouldQueue
 
     private function storeImportDetail(int $result, array $messages = [])
     {
-        return ImportDetail::create([
+        ImportDetail::create([
             'import_id' => $this->import->id,
             'line_number' => $this->row_num,
             'result' => $result,
@@ -169,7 +169,7 @@ class UserImportJob implements ShouldQueue
 
     private function validation(array $data, $user)
     {
-        $user_request = $user !== null ? new UserUpdateRequest() : new UserStoreRequest();
+        $user_request = $user !== null ? new UserCsvUpdateRequest() : new UserCsvStoreRequest();
         $validator = Validator::make($data, $user_request->rules(user_id: $user?->id), $user_request->messages(), $user_request->attributes());
 
         if ($validator->fails()) {

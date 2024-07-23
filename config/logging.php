@@ -130,9 +130,18 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
-        'csv_import' => [
+        'product_price_csv_import' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/csv_import.log'),
+            'path' => storage_path('logs/product_price_csv_import.log'),
+            'tap' => [App\Logging\CustomizeFormatter::class],
+            'level' => env('LOG_LEVEL', 'debug'),
+            'permission' => 0666,
+            'days' => 90
+        ],
+
+        'user_csv_import' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/user_csv_import.log'),
             'tap' => [App\Logging\CustomizeFormatter::class],
             'level' => env('LOG_LEVEL', 'debug'),
             'permission' => 0666,
