@@ -8,14 +8,14 @@ use App\Http\Requests\User\Api\CartRequest;
 use App\Models\Cart;
 use App\Models\Store;
 use App\Repositories\User\Api\CartRepository;
-use App\Traits\TaxTrait;
+use App\Traits\CalcTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
-    use TaxTrait;
+    use CalcTrait;
 
     public function index(Request $request, CartRepository $cart_repository)
     {

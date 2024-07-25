@@ -9,14 +9,14 @@ use App\Models\BaseProduct;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderProduct;
-use App\Traits\TaxTrait;
+use App\Traits\CalcTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    use TaxTrait;
+    use CalcTrait;
 
     public function index(Request $request)
     {
@@ -85,16 +85,7 @@ class OrderController extends Controller
                 // insert()でも可能だが$fillableチェックが入らないためcreate()で実装
                 foreach ($cart->products as $product) {
                     $base_product = $base_products->where('jan_cd', $product->jan_cd)->first();
-
-                    if ($base_product->price_tax) {
-                        $price_tax = $base_product->price_tax;
-
-                    } else if ($base_product->list_price_tax) {
-                        $price_tax = $base_product->list_price_tax;
-
-                    } else {
-                        $price_tax = $this->calcTax($base_product->list_price, $base_product->tax_rate);
-                    }
+                    $price_tax = $this->getPriceTax($base_product->price_tax, $base_product->list_price_tax, $base_product->list_price, $base_product->tax_rate);
 
                     OrderProduct::create([
                         'order_id' => $order->id,

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\TaxTrait;
+use App\Traits\CalcTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseProduct extends Model
 {
-    use TaxTrait;
+    use CalcTrait;
 
     protected $connection = 'mysql_shinko';
     protected $table = 'base_products';
@@ -30,14 +30,14 @@ class BaseProduct extends Model
     protected function listPriceTaxCalc(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => $attributes['list_price_tax'] ?: $this->calcTax($attributes['list_price'], $this->msProduct->tax_rate),
+            get: fn (mixed $value, array $attributes) => $attributes['list_price_tax'] ?: $this->getWithTax($attributes['list_price'], $this->msProduct->tax_rate),
         );
     }
 
     protected function wholesalePriceTaxCalc(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => (float) $attributes['wholesale_price_tax'] ?: $this->calcTax($attributes['wholesale_price'], $this->msProduct->tax_rate),
+            get: fn (mixed $value, array $attributes) => (float) $attributes['wholesale_price_tax'] ?: $this->getWithTax($attributes['wholesale_price'], $this->msProduct->tax_rate),
         );
     }
 
