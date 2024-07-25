@@ -47,10 +47,9 @@ class ProductPriceImportJob implements ShouldQueue
         $this->storeImport(2);
 
         $this->cols = array_flip([
-            0 => 'flag',
-            1 => 'store_id',
-            3 => 'jan_cd',
-            6 => 'price',
+            0 => 'store_id',
+            2 => 'jan_cd',
+            5 => 'price_tax',
         ]);
 
         try {
@@ -102,31 +101,16 @@ class ProductPriceImportJob implements ShouldQueue
                             throw new ImportException('商品が存在していません。');
                         }
 
-                        if ($row[$this->cols['flag']] == 1) {
-                            // 商品価格が存在するかチェック
-                            $product_price = ProductPrice::where([
-                                    ['store_id', '=', $store_id],
-                                    ['jan_cd', '=', $jan_cd],
-                                ])
-                                ->first();
-                            if ($product_price === null) {
-                                throw new ImportException('商品価格が存在していません。');
-                            }
-
-                            $product_price->delete();
-
-                        } else {
-                            $validated = $this->validation(['price' => $row[$this->cols['price']]]);
-                            ProductPrice::updateOrCreate(
-                                [
-                                    'store_id' => $store_id,
-                                    'jan_cd' => $jan_cd,
-                                ],
-                                [
-                                    'price' => $validated['price'],
-                                ]
-                            );
-                        }
+                        $validated = $this->validation(['price_tax' => $row[$this->cols['price_tax']]]);
+                        ProductPrice::updateOrCreate(
+                            [
+                                'store_id' => $store_id,
+                                'jan_cd' => $jan_cd,
+                            ],
+                            [
+                                'price_tax' => $validated['price_tax'],
+                            ]
+                        );
 
                         $this->storeImportDetail(1);
 

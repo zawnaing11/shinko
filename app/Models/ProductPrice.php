@@ -17,6 +17,6 @@ class ProductPrice extends Model
     protected $fillable = [
         'store_id',
         'jan_cd',
-        'price'
+        'price_tax',
     ];
 }

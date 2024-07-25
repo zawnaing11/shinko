@@ -72,8 +72,11 @@
                                         <th>店舗名</th>
                                         <th>JANコード</th>
                                         <th>商品名</th>
+                                        <th>卸値（税抜）</th>
+                                        <th>卸値（税込）</th>
                                         <th>定価価格（税抜）</th>
-                                        <th>販売価格（税抜）</th>
+                                        <th>定価価格（税込）</th>
+                                        <th>税込価格</th>
                                         <th>操作</th>
                                     </tr>
                                 </thead>
@@ -83,8 +86,11 @@
                                         <td class="text-break">{{ Str::limit($product_price->store_name, 30) }}</td>
                                         <td>{{ $product_price->jan_cd }}</td>
                                         <td class="text-break">{{ Str::limit($product_price->product_name, 20) }}</td>
+                                        <td>{{ number_format($product_price->wholesale_price) . '円' }}</td>
+                                        <td>{{ number_format($product_price->wholesale_price_tax_calc) . '円' }}</td>
                                         <td>{{ number_format($product_price->list_price) . '円' }}</td>
-                                        <td>{{ $product_price->price ? number_format($product_price->price) . '円' : '未設定' }}</td>
+                                        <td>{{ number_format($product_price->list_price_tax_calc) . '円' }}</td>
+                                        <td>{{ $product_price->price_tax ? number_format($product_price->price_tax) . '円' : '未設定' }}</td>
                                         <td>
                                             <form method="POST" class="form-destroy" action="{{ route('company.product_prices.destroy', $product_price?->product_price_id) }}">
                                                 @csrf

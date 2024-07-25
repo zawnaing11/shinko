@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\CalcTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseProduct extends Model
 {
+    use CalcTrait;
+
     protected $connection = 'mysql_shinko';
     protected $table = 'base_products';
     protected $primaryKey = ['base_id', 'jan_cd', 'price_start_date'];
@@ -21,6 +25,20 @@ class BaseProduct extends Model
     public function storeBases()
     {
         return $this->hasMany(StoreBase::class, 'base_id', 'base_id');
+    }
+
+    protected function listPriceTaxCalc(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $attributes['list_price_tax'] ?: $this->getWithTax($attributes['list_price'], $this->msProduct->tax_rate),
+        );
+    }
+
+    protected function wholesalePriceTaxCalc(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => (float) $attributes['wholesale_price_tax'] ?: $this->getWithTax($attributes['wholesale_price'], $this->msProduct->tax_rate),
+        );
     }
 
     public function scopeCurrent($q)
