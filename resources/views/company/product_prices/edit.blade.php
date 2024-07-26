@@ -52,13 +52,13 @@
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3">
                                 <div class="order-primary-detail mb-4">
-                                    <h6>卸値（税抜）</h6>
+                                    <h6>納価（税抜）</h6>
                                     <p class="mb-0">{{ number_format($product_price->wholesale_price) . '円' }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3">
                                 <div class="order-primary-detail mb-4">
-                                    <h6>卸値（税込）</h6>
+                                    <h6>納価（税込）</h6>
                                     <p class="mb-0">{{ number_format($product_price->wholesale_price_tax_calc) . '円' }}</p>
                                 </div>
                             </div>
