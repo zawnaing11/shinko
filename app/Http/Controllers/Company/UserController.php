@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Company;
 
+use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\UserStoreRequest;
 use App\Http\Requests\Company\UserUpdateRequest;
-use App\Http\Requests\CsvUploadRequest;
-use App\Jobs\UserImportJob;
+use App\Http\Requests\ExcelUploadRequest;
+use App\Jobs\ExcelImportJob;
 use App\Models\Import;
 use App\Models\User;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -103,47 +105,11 @@ class UserController extends Controller
 
     public function export()
     {
-        $headers = [
-            'Content-Type' => 'application/octet-stream',
-        ];
-
-        $file_name = 'ユーザー' . Carbon::now()->format('YmdHis') . '.csv';
-
-        $callback = function () {
-
-            $handle = fopen('php://output', 'w');
-
-            fputcsv($handle, [
-                '削除（1=削除）',
-                'ID',
-                'Eメールアドレス',
-                'パスワード',
-                '氏名',
-                '退職日'
-            ]);
-
-            User::orderBy('updated_at', 'DESC')
-                ->where('company_id', auth()->user()->company_id)
-                ->chunk(1000, function ($users) use ($handle) {
-                    foreach ($users as $user) {
-                        $values = [
-                            'flag' => '',
-                            'id' => $user->id,
-                            'email' => $user->email,
-                            'password' => '',
-                            'name' => $user->name,
-                            'retirement_date' => $user->retirement_date?->format('Y-m-d'),
-                        ];
-                        fputcsv($handle, $values);
-                    }
-                });
-            fclose($handle);
-        };
-
-        return response()->streamDownload($callback, $file_name, $headers);
+        $file_name = 'ユーザー' . Carbon::now()->format('YmdHis') . '.xlsx';
+        return Excel::download(new UserExport(), $file_name);
     }
 
-    public function upload(CsvUploadRequest $request)
+    public function upload(ExcelUploadRequest $request)
     {
         $import_file = $request->validated()['import_file'];
 
@@ -156,20 +122,20 @@ class UserController extends Controller
                 ]);
 
                 $new_file_name = uniqid() . '.' . $import_file->getClientOriginalExtension();
-                $file_path = Storage::putFileAs(config('const.imports.csv_file_path') . 'users', $import_file, $new_file_name);
+                $file_path = Storage::putFileAs(config('const.imports.excel_file_path') . 'users', $import_file, $new_file_name);
 
-                dispatch(new UserImportJob($import, $file_path))
+                dispatch(new ExcelImportJob($import, $file_path))
                     ->onQueue('import');
             });
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
             return back()
-                ->with('alert.error', 'CSVアップロードに失敗しました。')
+                ->with('alert.error', 'EXCELアップロードに失敗しました。')
                 ->withInput();
         }
 
         return redirect()
             ->back()
-            ->with('alert.success', 'CSVアップロード受け付けました。');
+            ->with('alert.success', 'EXCELアップロード受け付けました。');
     }
 }

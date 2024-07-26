@@ -1,7 +1,7 @@
 <?php
 
 $upload_image_extensions = ['jpeg', 'jpg', 'png', 'tiff', 'heic'];
-$upload_csv_extensions = ['csv'];
+$upload_excel_extensions = ['xlsx', 'xls'];
 
 return [
     // common
@@ -17,10 +17,10 @@ return [
         return '.' . $value;
     }, $upload_image_extensions),
 
-    'upload_csv_extensions' => $upload_csv_extensions,
-    'accept_csv_extensions' => array_map(function ($value) {
+    'upload_excel_extensions' => $upload_excel_extensions,
+    'accept_excel_extensions' => array_map(function ($value) {
         return '.' . $value;
-    }, $upload_csv_extensions),
+    }, $upload_excel_extensions),
 
     // product_price
     'product_prices' => [
@@ -33,7 +33,7 @@ return [
         'image_path' => 'public/images/notifications/',
     ],
 
-    // csv import
+    // excel import
     'imports' => [
         'statuses' => [
             1 => '新規',
@@ -41,7 +41,7 @@ return [
             3 => '完了',
             10 => '失敗',
         ],
-        'csv_file_path' => 'csv/',
+        'excel_file_path' => 'excel/',
     ],
 
     'import_details' => [
