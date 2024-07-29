@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_products', function (Blueprint $table) {
-            $table->integer('selling_price_tax')->comment('税込売価')->change();
+        Schema::table('product_prices', function (Blueprint $table) {
+            $table->integer('price_tax')->comment('売価（税込）')->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_products', function (Blueprint $table) {
-            $table->integer('selling_price_tax')->comment('税込販売価格')->change();
+        Schema::table('product_prices', function (Blueprint $table) {
+            $table->integer('price_tax')->comment('税込価格')->change();
         });
     }
 };
