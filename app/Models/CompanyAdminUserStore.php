@@ -17,6 +17,11 @@ class CompanyAdminUserStore extends Model
         return $this->belongsTo(CompanyAdminUser::class, 'company_admin_user_id');
     }
 
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
     public function storeBases()
     {
         return $this->hasMany(StoreBase::class, 'store_id', 'store_id');

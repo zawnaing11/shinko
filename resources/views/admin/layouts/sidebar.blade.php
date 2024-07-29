@@ -13,6 +13,11 @@
                     <i class="fa fa-bullhorn"></i><span>お知らせ管理</span>
                 </a>
             </li>
+            <li id="stores">
+                <a href="{{ route('admin.stores.index') }}">
+                    <i class="ri-store-fill"></i><span>店舗管理</span>
+                </a>
+            </li>
         </ul>
     </div>
     <!-- End Navigationbar -->

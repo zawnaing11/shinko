@@ -15,4 +15,9 @@ class CompanyAdminUser extends Authenticatable
     {
         return $this->hasMany(CompanyAdminUserStore::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

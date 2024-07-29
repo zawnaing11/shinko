@@ -1,3 +1,11 @@
 span.required {
     color: red;
 }
+.qr_code {
+    padding: 0px;
+}
+.qr_code > img {
+    max-width: 280px;
+    max-height: 280px;
+    margin: 10px auto 10px;
+}
