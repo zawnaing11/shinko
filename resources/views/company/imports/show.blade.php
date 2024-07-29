@@ -1,5 +1,5 @@
 @extends('company.layouts.main')
-@section('title', 'EXCELインポート詳細')
+@section('title', 'Excelインポート詳細')
 @section('content')
 
 <div class="contentbar">
@@ -47,7 +47,7 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">EXCELインポート詳細</h5>
+                    <h5 class="card-title">Excelインポート詳細</h5>
                 </div>
                 <div class="card-body">
 

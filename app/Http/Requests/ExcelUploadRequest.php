@@ -27,13 +27,13 @@ class ExcelUploadRequest extends BaseFormRequest
     public function attributes()
     {
         return [
-            'import_file' => 'EXCEL',
+            'import_file' => 'Excel',
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         return back()
-            ->with('alert.error', 'EXCELアップロードに失敗しました。');
+            ->with('alert.error', 'Excelアップロードに失敗しました。');
     }
 }

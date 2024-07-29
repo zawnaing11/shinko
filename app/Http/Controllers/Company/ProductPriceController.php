@@ -130,17 +130,17 @@ class ProductPriceController extends Controller
                 $file_path = Storage::putFileAs(config('const.imports.excel_file_path') . 'product_prices', $import_file, $new_file_name);
 
                 dispatch(new ExcelImportJob($import, $file_path))
-                    ->onQueue('import');
+                    ->onQueue('excel_import');
             });
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
             return back()
-                ->with('alert.error', 'EXCELアップロードに失敗しました。')
+                ->with('alert.error', 'Excelアップロードに失敗しました。')
                 ->withInput();
         }
 
         return redirect()
             ->back()
-            ->with('alert.success', 'EXCELアップロード受け付けました。');
+            ->with('alert.success', 'Excelアップロード受け付けました。');
     }
 }
