@@ -5,8 +5,8 @@
 <link href="{{ asset('assets/admin/plugins/datepicker/datepicker.min.css') }}" rel="stylesheet" type="text/css">
 @endsection
 @section('widgetbar')
-<a href="{{ route('company.users.export') }}" class="btn btn-outline-primary"><i class="ri-chat-download-line align-middle mr-2"></i>CSVエクスポート</a>
-<a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal" data-target="#import_csv"><i class="ri-chat-upload-line align-middle mr-2"></i>CSVインポート</a>
+<a href="{{ route('company.users.export') }}" class="btn btn-outline-primary"><i class="ri-chat-download-line align-middle mr-2"></i>Excelエクスポート</a>
+<a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal" data-target="#excel_import"><i class="ri-chat-upload-line align-middle mr-2"></i>Excelインポート</a>
 <a href="{{ route('company.users.create') }}" class="btn btn-outline-primary"><i class="ri-add-line align-middle mr-2"></i>登録</a>
 @endsection
 @section('content')
@@ -123,11 +123,11 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="import_csv" role="dialog">
+    <div class="modal fade" id="excel_import" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">CSVインポート</h5>
+                    <h5 class="modal-title">Excelインポート</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -136,7 +136,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group mb-3">
-                            <input type="file" name="import_file" class="form-control-file" required accept="{{ implode(',', config('const.accept_csv_extensions')) }}">
+                            <input type="file" name="import_file" class="form-control-file" required accept="{{ implode(',', config('const.accept_excel_extensions')) }}">
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -1,5 +1,5 @@
 @extends('company.layouts.main')
-@section('title', 'CSVインポート管理')
+@section('title', 'Excelインポート管理')
 @section('content')
 
 <div class="contentbar">
@@ -49,7 +49,7 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-header">
-                    <h5 class="card-title">CSVインポート管理</h5>
+                    <h5 class="card-title">Excelインポート管理</h5>
                 </div>
                 <div class="card-body">
 

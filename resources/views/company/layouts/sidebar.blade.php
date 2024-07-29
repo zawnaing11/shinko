@@ -20,7 +20,7 @@
             </li>
             <li id="imports">
                 <a href="{{ route('company.imports.index') }}">
-                    <i class="ri-list-check"></i><span>CSVインポート管理</span>
+                    <i class="ri-list-check"></i><span>Excelインポート管理</span>
                 </a>
             </li>
         </ul>

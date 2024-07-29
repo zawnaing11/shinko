@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class CsvUploadRequest extends BaseFormRequest
+class ExcelUploadRequest extends BaseFormRequest
 {
 
     /**
@@ -19,7 +19,7 @@ class CsvUploadRequest extends BaseFormRequest
             'import_file' => [
                 'required',
                 'file',
-                'extensions:' . implode(',', config('const.upload_csv_extensions')),
+                'extensions:' . implode(',', config('const.upload_excel_extensions')),
             ]
         ];
     }
@@ -27,13 +27,13 @@ class CsvUploadRequest extends BaseFormRequest
     public function attributes()
     {
         return [
-            'import_file' => 'CSV',
+            'import_file' => 'Excel',
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         return back()
-            ->with('alert.error', 'CSVアップロードに失敗しました。');
+            ->with('alert.error', 'Excelアップロードに失敗しました。');
     }
 }

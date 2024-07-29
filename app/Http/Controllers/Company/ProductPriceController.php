@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Company;
 
+use App\Exports\ProductPriceExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Company\ProductPriceRequest;
-use App\Http\Requests\CsvUploadRequest;
-use App\Jobs\ProductPriceImportJob;
+use App\Http\Requests\ExcelUploadRequest;
+use App\Jobs\ExcelImportJob;
 use App\Models\BaseProduct;
 use App\Models\Import;
 use App\Models\ProductPrice;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductPriceController extends Controller
 {
@@ -106,51 +108,13 @@ class ProductPriceController extends Controller
         return back()->with('alert.success', '商品価格を削除しました。');
     }
 
-    public function export(ProductPriceRepository $product_price_repository)
+    public function export()
     {
-        $headers = [
-            'Content-Type' => 'application/octet-stream',
-        ];
-
-        $file_name = '商品価格_' . Carbon::now()->format('YmdHis') . '.csv';
-
-        $callback = function () use ($product_price_repository) {
-
-            $handle = fopen('php://output', 'w');
-
-            fputcsv($handle, [
-                '店舗ID',
-                '店舗名',
-                'JANコード',
-                '商品名',
-                '卸値（税抜）',
-                '税込価格',
-            ]);
-
-            $product_price_repository->all()
-                ->where('company_admin_user_stores.company_admin_user_id', auth()->user()->id)
-                ->orderBy('store_id', 'ASC')
-                ->orderBy('base_products.jan_cd', 'ASC')
-                ->chunk(1000, function ($base_products) use ($handle) {
-                    foreach ($base_products as $base_product) {
-                        $values = [
-                            'store_id' => $base_product->store_id,
-                            'store_name' => $base_product->store_name,
-                            'jan_cd' => $base_product->jan_cd,
-                            'product_name' => str_replace("\x1F", '', $base_product->product_name), // remove unit separator in product_name
-                            'wholesale_price' => $base_product->wholesale_price,
-                            'price_tax' => $base_product->price_tax ?: $base_product->list_price_tax_calc,
-                        ];
-                        fputcsv($handle, $values);
-                    }
-                });
-            fclose($handle);
-        };
-
-        return response()->streamDownload($callback, $file_name, $headers);
+        $file_name = '商品価格_' . Carbon::now()->format('YmdHis') . '.xlsx';
+        return Excel::download(new ProductPriceExport(), $file_name);
     }
 
-    public function upload(CsvUploadRequest $request)
+    public function upload(ExcelUploadRequest $request)
     {
         $import_file = $request->validated()['import_file'];
 
@@ -163,20 +127,20 @@ class ProductPriceController extends Controller
                 ]);
 
                 $new_file_name = uniqid() . '.' . $import_file->getClientOriginalExtension();
-                $file_path = Storage::putFileAs(config('const.imports.csv_file_path') . 'product_prices', $import_file, $new_file_name);
+                $file_path = Storage::putFileAs(config('const.imports.excel_file_path') . 'product_prices', $import_file, $new_file_name);
 
-                dispatch(new ProductPriceImportJob($import, $file_path))
-                    ->onQueue('import');
+                dispatch(new ExcelImportJob($import, $file_path))
+                    ->onQueue('excel_import');
             });
         } catch (Exception $e) {
             logger()->error('$e', [$e->getCode(), $e->getMessage()]);
             return back()
-                ->with('alert.error', 'CSVアップロードに失敗しました。')
+                ->with('alert.error', 'Excelアップロードに失敗しました。')
                 ->withInput();
         }
 
         return redirect()
             ->back()
-            ->with('alert.success', 'CSVアップロード受け付けました。');
+            ->with('alert.success', 'Excelアップロード受け付けました。');
     }
 }
