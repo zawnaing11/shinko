@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\StoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,4 +31,6 @@ Route::middleware(['auth:admin', 'is_active:admin'])
         });
         // お知らせ管理
         Route::resource('notifications', NotificationController::class)->except('show');
+        // 店舗管理
+        Route::resource('stores', StoreController::class)->only(['index']);
     });
