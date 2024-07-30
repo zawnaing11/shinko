@@ -108,7 +108,7 @@
                     <img src="">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                    <a href="" class="btn btn-default qr_download" download="qr_code.jpeg">ダウンロード</a>
                 </div>
             </div>
         </div>
@@ -122,8 +122,9 @@
 <script src="{{ asset('assets/admin/js/select2.js') }}"></script>
 <script type="text/javascript">
     $('.show_qr_modal').on('click', (e) => {
-        const qr_code = $(e.currentTarget).data('qr-code');
-        $('.qr_code > img').attr('src', 'data:image/jpeg;base64,' + qr_code);
+        const qr_code = 'data:image/jpeg;base64,' + $(e.currentTarget).data('qr-code');
+        $('.qr_code > img').attr('src', qr_code);
+        $('.qr_download').attr('href', qr_code);
         $('#qr_modal').modal('show');
     });
 </script>
