@@ -4,9 +4,15 @@ namespace App\Exports;
 
 use App\Repositories\Company\ProductPriceRepository;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class ProductPriceExport implements FromCollection, WithHeadings
+class ProductPriceExport implements FromCollection, ShouldAutoSize, WithColumnFormatting, WithEvents, WithHeadings, WithStrictNullComparison
 {
     public function headings(): array
     {
@@ -29,19 +35,33 @@ class ProductPriceExport implements FromCollection, WithHeadings
             ->orderBy('base_products.jan_cd', 'ASC')
             ->get();
 
-        if ($base_products !== null) {
-            foreach ($base_products as $base_product) {
-                $datas[] = [
-                    $base_product->store_id,
-                    $base_product->store_name,
-                    $base_product->jan_cd,
-                    $base_product->product_name,
-                    $base_product->wholesale_price,
-                    $base_product->price_tax ?: $base_product->list_price_tax_calc,
-                ];
-            }
+        foreach ($base_products as $base_product) {
+            $datas[] = [
+                $base_product->store_id,
+                $base_product->store_name,
+                $base_product->jan_cd,
+                $base_product->product_name,
+                $base_product->wholesale_price,
+                $base_product->price_tax ?: $base_product->list_price_tax_calc,
+            ];
         }
 
         return collect($datas ?? []);
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'C' => NumberFormat::FORMAT_NUMBER,
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $event->sheet->getDelegate()->setSelectedCell('A1');
+            },
+        ];
     }
 }
