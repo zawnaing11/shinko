@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_prices', function (Blueprint $table) {
-            $table->integer('price_tax')->comment('売価（税込）')->change();
+            $table->integer('price_tax')->comment('税込売価')->change();
         });
     }
 
