@@ -4,9 +4,10 @@ namespace App\Exports;
 
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class UserExport implements FromCollection, WithHeadings
+class UserExport implements FromCollection, ShouldAutoSize, WithHeadings
 {
     public function headings(): array
     {
@@ -26,17 +27,15 @@ class UserExport implements FromCollection, WithHeadings
             ->where('company_id', auth()->user()->company_id)
             ->get();
 
-        if ($users !== null) {
-            foreach ($users as $user) {
-                $datas[] = [
-                    '',
-                    $user->id,
-                    $user->email,
-                    '',
-                    $user->name,
-                    $user->retirement_date?->format('Y-m-d'),
-                ];
-            }
+        foreach ($users as $user) {
+            $datas[] = [
+                '',
+                $user->id,
+                $user->email,
+                '',
+                $user->name,
+                $user->retirement_date?->format('Y-m-d'),
+            ];
         }
 
         return collect($datas ?? []);
