@@ -52,13 +52,13 @@
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3">
                                 <div class="order-primary-detail mb-4">
-                                    <h6>卸値（税抜）</h6>
+                                    <h6>納価（税抜）</h6>
                                     <p class="mb-0">{{ number_format($product_price->wholesale_price) . '円' }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-xl-3">
                                 <div class="order-primary-detail mb-4">
-                                    <h6>卸値（税込）</h6>
+                                    <h6>納価（税込）</h6>
                                     <p class="mb-0">{{ number_format($product_price->wholesale_price_tax_calc) . '円' }}</p>
                                 </div>
                             </div>
@@ -77,8 +77,8 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="price_tax" class="form-label">税込価格<span class="required">*</span></label>
-                                    <input type="number" id="price_tax" name="price_tax" class="form-control @error('price_tax') is-invalid @enderror" value="{{ old('price_tax', $product_price->price_tax ?: $product_price->list_price_tax_calc) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="税込価格">
+                                    <label for="price_tax" class="form-label">売価（税込）<span class="required">*</span></label>
+                                    <input type="number" id="price_tax" name="price_tax" class="form-control @error('price_tax') is-invalid @enderror" value="{{ old('price_tax', $product_price->price_tax ?: $product_price->list_price_tax_calc) }}" required min="0" max="{{ config('const.default_integer_maxvalue') }}" placeholder="売価（税込）">
                                     @error('price_tax')
                                         <div id="price_tax-error" class="invalid-feedback animated fadeInDown">{{ $message }}</div>
                                     @enderror

@@ -22,7 +22,7 @@ class ProductPriceExport implements FromCollection, ShouldAutoSize, WithColumnFo
             'JANコード',
             '商品名',
             '納価（税抜）',
-            '税込価格',
+            '売価（税込）',
         ];
     }
 
